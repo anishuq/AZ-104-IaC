@@ -26,3 +26,4 @@ New-AzWebApp -ResourceGroupName $ResourceGroupName `
 Write-Host "Web App deployed successfully! We are also in github now"
 Write-Host "commit 2"
 Write-Host "commit 3"
+Write-Host "commit 4 > this should be in feature branch"
