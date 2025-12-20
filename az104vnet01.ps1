@@ -17,11 +17,17 @@ $subnetconfigobj= New-AzVirtualNetworkSubnetConfig `
     -Name $SubnetName `
     -AddressPrefix $SubnetAddressPrefix
 
-$VirtualNetworkObj = New-AzVirtualNetwork -Name $VNetName `
-                    -ResourceGroupName $ResourceGroupName `
-                    -Location $Location `
-                    -AddressPrefix $AddressPrefix `
-                    -Subnet $subnetconfigobj
+
+
+$VnetParameters = @{
+    Name              = $VNetName
+    ResourceGroupName = $ResourceGroupName
+    Location          = $Location
+    AddressPrefix     = $AddressPrefix
+    Subnet            = $subnetconfigobj
+}
+
+$VirtualNetworkObj = New-AzVirtualNetwork @VnetParameters 
 
 $VirtualNetworkObj | Set-AzVirtualNetwork
 
