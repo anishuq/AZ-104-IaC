@@ -1,6 +1,6 @@
 #create a new VNET
 $ResourceGroupName = "az104vnet-rg"
-$Location = "Canada Central"
+$Location = "CanadaCentral"
 $VNetName = "vnet-eus-02"
 $AddressPrefix = "172.16.0.0/16"
 $SubnetName = "subnet-01"
@@ -42,12 +42,18 @@ $pip = New-AzPublicIpAddress -Name $pipName `
 
 
 
-New-AzVM -ResourceGroupName "az104vnet-rg"`
+New-AzVM -ResourceGroupName "az104vnet-rg" `
          -Name $Vmname `
-         -Location $Location `
+         -Location "CanadaCentral" `
+         -Size "Standard_B1s" `
          -VirtualNetworkName $VNetName `
          -SubnetName $SubnetName `
          -PublicIpAddressName $pipName `
          -OpenPorts 22 `
          -Image $Image `
          -Credential (Get-Credential)
+
+
+
+Get-AzVM -ResourceGroupName $ResourceGroupName -Name $Vmname
+Write-Host "Virtual Network and VM deployed successfully!"
