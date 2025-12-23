@@ -7,7 +7,7 @@ $SubnetName = "subnet-01"
 $SubnetAddressPrefix = "172.16.1.0/24"
 
 $Vmname = "vm-01"
-$Image = "UbuntuLTS"
+$Image = "Ubuntu22LTS"
 $pipName = "pip-vm-01"
 
 Connect-AzAccount
@@ -38,7 +38,7 @@ $pip = New-AzPublicIpAddress -Name $pipName `
          -ResourceGroupName $ResourceGroupName `
          -Location $Location `
          -AllocationMethod Static `
-         -Sku Standard
+         -Sku Basic
 
 
 
@@ -48,7 +48,8 @@ New-AzVM -ResourceGroupName $ResourceGroupName `
          -Size "Standard_B1s" `
          -VirtualNetworkName $VNetName `
          -SubnetName $SubnetName `
-         -PublicIpAddressName $pipName `
+         -PublicIpAddressName $pip.Name `
+         -OpenPorts 22 `
          -Image $Image `
          -Credential (Get-Credential)
 
