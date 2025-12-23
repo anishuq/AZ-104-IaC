@@ -42,14 +42,13 @@ $pip = New-AzPublicIpAddress -Name $pipName `
 
 
 
-New-AzVM -ResourceGroupName "az104vnet-rg" `
+New-AzVM -ResourceGroupName $ResourceGroupName `
          -Name $Vmname `
-         -Location "CanadaCentral" `
+         -Location $Location `
          -Size "Standard_B1s" `
          -VirtualNetworkName $VNetName `
          -SubnetName $SubnetName `
          -PublicIpAddressName $pipName `
-         -OpenPorts 22 `
          -Image $Image `
          -Credential (Get-Credential)
 
