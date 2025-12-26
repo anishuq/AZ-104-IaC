@@ -7,7 +7,7 @@ $SubnetName = "subnet-01"
 $SubnetAddressPrefix = "172.16.1.0/24"
 
 $Vmname = "vm-01"
-$Image = "Ubuntu22LTS"
+$Image = "Canonical:0001-com-ubuntu-server-jammy:22_04-lts:latest"
 $pipName = "pip-vm-01"
 
 Connect-AzAccount
