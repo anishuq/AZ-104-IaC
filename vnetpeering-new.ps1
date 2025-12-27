@@ -153,7 +153,7 @@ Create-VMs -pipName $JBpipName `
            -Image $Image
         
 #Creating VM in vnet-eus-01 without public IP
-<#
+
 Create-VMs -pipName "" `
            -EnablePublicIP $false `
            -Vmname $Vmname2 `
@@ -172,4 +172,5 @@ Create-VMs -pipName "" `
            -ResourceGroupName $ResourceGroupName `
            -Location $Location2 `
            -Image $Image
-           #>
+           
+Write-Host "All VMs deployed successfully!"
