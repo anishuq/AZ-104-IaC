@@ -19,7 +19,7 @@ $SubnetName2 = "workloadSubnet"
 $SubnetAddressPrefix2 = "10.0.2.0/24"
 
 $SubnetName3 = "GatewaySubnet"
-$SubnetAddressPrefix3 = "10.0.0.0/28"
+$SubnetAddressPrefix3 = "10.0.0.0/27"
 ############################################
 #creating VNET-2 in West US
 
@@ -32,7 +32,7 @@ $SubnetName4 = "workloadSubnet"
 $SubnetAddressPrefix4 = "10.1.1.0/24"
 
 $SubnetName5 = "GatewaySubnet"
-$SubnetAddressPrefix5 = "10.1.0.0/28"
+$SubnetAddressPrefix5 = "10.1.0.0/27"
 ############################################
 
 Connect-AzAccount
@@ -247,8 +247,25 @@ $gwpip = New-AzPublicIpAddress -Name $GWPipName `
          -AllocationMethod Static `
          -Tier Regional
 
+write-Host "Public IP for VPN Gateway created: $($gwpip.IpAddress)" -ForegroundColor Green
+
 #Get the VNET object for vnet-wus-01.
 $VNetWestUSObj = Get-AzVirtualNetwork -Name $VNetName2 -ResourceGroupName $ResourceGroupName
+write-Host "VNET Object for $($VNetWestUSObj.Name) retrieved." -ForegroundColor Green
 
 $VNetWestUS_GWSubnetObj = Get-AzVirtualNetworkSubnetConfig -Name $SubnetName5 -VirtualNetwork $VNetWestUSObj
-                            #  SubnetName5 which is the "GatewaySubnet" of vnet-wus-01
+Write-Host "Subnet Object for $($VNetWestUS_GWSubnetObj.Name) retrieved." -ForegroundColor Green
+#  SubnetName5 which is the "GatewaySubnet" of vnet-wus-01
+
+$gwipconfigObj = New-AzVirtualNetworkGatewayIpConfig -Name "vpngw-wus-01" `
+                    -Subnet $VNetWestUS_GWSubnetObj `
+                    -PublicIpAddress $gwpip
+
+New-AzVirtualNetworkGateway -Name "vpngw-wus-01" `
+    -ResourceGroupName $ResourceGroupName `
+    -Location $Location2 `
+    -GatewayType Vpn `
+    -VpnType RouteBased `
+    -EnableBgp $false `
+    -IpConfigurations $gwipconfigObj `
+    -GatewaySku VpnGw1
