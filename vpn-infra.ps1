@@ -186,7 +186,8 @@ if ($EnablePublicIP) {
          -ResourceGroupName $ResourceGroupName `
          -Location $Location `
          -AllocationMethod Static `
-         -Sku Basic
+         -Sku Basic `
+         -DomainNameLabel "jumpbox-vm-vnet-eus-01" # Add this for FQDN
 
     $vmParams['PublicIpAddressName'] = $pip.Name
     $vmParams["OpenPorts"] = 22

@@ -72,7 +72,7 @@ function Create-VNet {
 
     $VirtualNetworkObj = New-AzVirtualNetwork @VnetParameters
 
-    # Update the virtual network to ensure the subnet is created
+    # Make things "permanent" in Azure!
     $VirtualNetworkObj | Set-AzVirtualNetwork
 }
 

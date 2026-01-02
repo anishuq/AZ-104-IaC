@@ -17,8 +17,6 @@ $subnetconfigobj= New-AzVirtualNetworkSubnetConfig `
     -Name $SubnetName `
     -AddressPrefix $SubnetAddressPrefix
 
-
-
 $VnetParameters = @{
     Name              = $VNetName
     ResourceGroupName = $ResourceGroupName
@@ -29,6 +27,7 @@ $VnetParameters = @{
 
 $VirtualNetworkObj = New-AzVirtualNetwork @VnetParameters 
 
+// Update the virtual network to ensure the subnet is created
 $VirtualNetworkObj | Set-AzVirtualNetwork
 
 Write-Host "Virtual Network deployed successfully!"
