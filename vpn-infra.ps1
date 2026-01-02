@@ -200,6 +200,37 @@ else {
 New-AzVM @vmParams
 }
 
+function Show-FQDN{
+    param (
+        [string]$ResourceGroupName,
+        [string]$pipName 
+    )
+    
+    $pip = Get-AzPublicIpAddress -Name $pipName -ResourceGroupName $ResourceGroupName
+    $fqdn = $pip.DnsSettings.Fqdn
+
+    Write-Host "The FQDN for Jumpbox is $($fqdn)" -ForegroundColor Cyan
+}
+
+function Print-PrivateIpAddress {
+    param (
+        [string]$Vmname,
+        [string]$ResourceGroupName
+    )
+    
+    $VMObj = Get-AzVM -ResourceGroupName $ResourceGroupName -Name $Vmname 
+    # Get the NIC name from the ID string
+    $nicName = ($VMObj.NetworkProfile.NetworkInterfaces.Id -split '/')[-1]
+    
+    #get the NIC object from $nicName
+    $nic = Get-AzNetworkInterface -Name $nicName -ResourceGroupName $ResourceGroupName
+
+    foreach ($ipconfig in $nic.IpConfigurations) {
+    Write-Host "Private IP: $($ipconfig.PrivateIpAddress)" -ForegroundColor Green
+    }
+}
+
+
 $JBpipName = "pip-jumpbox-vm-01"
 #This is the public IP for the jumpbox VM inside vnet-eus-01 inside jumpboxSubnet
 Create-VMs -pipName $JBpipName `
@@ -210,6 +241,9 @@ Create-VMs -pipName $JBpipName `
            -ResourceGroupName $ResourceGroupName `
            -Location $Location1 `
            -Image $Image
+#We are going to print the FQDN for the Jumpbox.
+Show-FQDN -ResourceGroupName $ResourceGroupName -pipName $JBpipName
+
         
 #Creating VM in vnet-eus-01 without public IP inside its workloadSubnet
 
@@ -222,6 +256,8 @@ Create-VMs -pipName "" `
            -Location $Location1 `
            -Image $Image
 
+Print-PrivateIpAddress -Vmname $Vmname2 -ResourceGroupName $ResourceGroupName
+
 #Creating VM in vnet-wus-01 without public IP inside its workloadSubnet
 Create-VMs -pipName "" `
            -EnablePublicIP $false `
@@ -232,6 +268,8 @@ Create-VMs -pipName "" `
            -Location $Location2 `
            -Image $Image
            
+Print-PrivateIpAddress -Vmname $Vmname3 -ResourceGroupName $ResourceGroupName
+
 Write-Host "All VMs deployed successfully!"
 
 <#
