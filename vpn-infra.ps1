@@ -1,6 +1,10 @@
 <#
 This script creates two virtual networks in different regions and a jumpbox VM in EastUS VNET.
 EastUS VNET will have 3 subnets: jumpboxSubnet, workloadSubnet, and GatewaySubnet.
+We have created a VPN GW in West US through PS.
+We have created a VPN GW in East US through Azure Portal
+This is Exercise 4.2 from 
+MCA Microsoft Certified Associate Azure Administrator Study Guide_ Exam AZ-104-Sybex (2022)
 #>
 
 #create a new VNET
