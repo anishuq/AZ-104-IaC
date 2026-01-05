@@ -277,11 +277,11 @@ Print-PrivateIpAddress -Vmname $Vmname3 -ResourceGroupName $ResourceGroupName
 Write-Host "All VMs deployed successfully!"
 
 <#
-Now we create the VNET Peering for vnet-wus-01.
+Now we create the VPN GW for vnet-wus-01.
 This will be done programitacally.
 #>
 
-$GWPipName = "pip-vpn-wus"
+$GWPipName = "pip-vpn-eus"
 $gwpip = New-AzPublicIpAddress -Name $GWPipName `
          -ResourceGroupName $ResourceGroupName `
          -Location $Location2 `
