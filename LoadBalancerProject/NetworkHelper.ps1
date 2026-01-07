@@ -3,11 +3,36 @@ Write-Host "Network Helper Loaded!"
 
 function New-AzVNetSubnetCreation{
     param(
+        [string]$ResourceGroupName,
+        [string]$Location,
         [string]$vnetName,
-        [string]$subnetName,
-        [string]$addressPrefix
+        [string]$vnetAddressPrefix,
+        [string]$jumpboxSubnetName,
+        [string]$jumpboxAddressPrefix,
+        [string]$webSubnetName,
+        [string]$webAddressPrefix
     )
-    Write-Host "This is a placeholder for New-AzVNetSubnetCreation function. $($vnetName), $($subnetName), $($addressPrefix)    "
+    Write-Host "Creating VNet and Subnets: $($ResourceGroupName), $($Location), $($vnetName), $($jumpboxSubnetName), $($jumpboxAddressPrefix), $($webSubnetName), $($webAddressPrefix)"
+    #crete the subnetconfigs
+    
+    $jumpboxSubnetConfig = New-AzVirtualNetworkSubnetConfig -Name $jumpboxSubnetName `
+    -AddressPrefix $jumpboxAddressPrefix
 
-    return "Howdee do"
+    $webSubnetConfig = New-AzVirtualNetworkSubnetConfig -Name $webSubnetName `
+    -AddressPrefix $webAddressPrefix
+
+    #webserver rule config
+    $webserverRuleConfig = New-AzNetworkSecurityRuleConfig -Name "Allow-HTTP-Inbound" `
+    -Description "Allow HTTP Inbound only from Internet" `
+    -Access "Allow" -Protocol "Tcp" -Direction "Inbound" `
+    -Priority 100 -SourceAddressPrefix "*" -SourcePortRange "*" `
+    -DestinationAddressPrefix "*" -DestinationPortRange 80
+
+    #create the nsg
+    $webNSG = New-AzNetworkSecurityGroup -ResourceGroupName $ResourceGroupName `
+    -Location $Location -Name "webNSG" -SecurityRules $webserverRuleConfig
+
+    #assign nsg to web subnet
+    $webSubnetConfig.NetworkSecurityGroup = $webNSG
+
 }
