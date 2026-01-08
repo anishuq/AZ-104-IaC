@@ -24,6 +24,7 @@ function New-AzVMCreation{
         Image             = $Image
         Size              = "Standard_B1s"
         Credential        = $Credential
+        ErrorAction      = "Stop"
     }
 
     if($EnablePublicIP -eq $true){
@@ -31,14 +32,21 @@ function New-AzVMCreation{
         $publicIP = New-AzPublicIpAddress -Name $pipName `
         -ResourceGroupName $ResourceGroupName `
         -Location $Location `
-        -AllocationMethod Static
+        -AllocationMethod Static `
+        -Sku Basic `
+        -DomainNameLabel ($Vmname + "-webserveradmin") `
+        -ErrorAction Stop
 
         #add public ip to vm parameters
         $vmParameters["PublicIpAddress"] = $publicIP
-        $vmParameters["OpenPorts"] = 3389,80
+        $vmParameters["OpenPorts"] = 3389,22
 
         #create the jumpbox vm
-        New-AzVM @vmParameters
+        New-AzVM @vmParameters 
+
+        $fqdn = $publicIP.DnsSettings.Fqdn
+
+        Write-Host "The FQDN for Jumpbox is $($fqdn)" -ForegroundColor Cyan
     }
     else {
     Write-Host "Public IP not needed. We will create 3 web servers here in a loop. These will NOT have public IPs." -ForegroundColor Yellow
