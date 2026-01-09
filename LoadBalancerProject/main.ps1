@@ -39,7 +39,7 @@ Write-Host "Creating VMS now..." -ForegroundColor Green
 
 $Image = "Canonical:0001-com-ubuntu-server-jammy:22_04-lts:latest"
 $username = "admanisulhuq" #enter username for all VM
-$plainPassword = "McIe@4:5WmFvM" #enter password for VM
+$plainPassword = "McIe@45WmFvM" #enter password for VM
 $password = ConvertTo-SecureString $plainPassword -AsPlainText -Force
 $vmcred = New-Object System.Management.Automation.PSCredential ($username, $password)
 $jumpboxVMName = "jumpbox-vm"
@@ -48,5 +48,15 @@ $jumpboxVMName = "jumpbox-vm"
 #First, create the jumpbox VM with public IP
 New-AzVMCreation -pipName "jumpbox-pip" -EnablePublicIP $true `
 -Vmname $jumpboxVMName -VNetName $VNetName1 -SubnetName $SubnetName1 `
+-ResourceGroupName $ResourceGroupName -Location $Location1 `
+-Image $Image -Credential $vmcred 
+
+
+
+<#Second, create the WebServer VMs without public IP.
+We will create 3 web servers in a loop inside the function. 
+#>
+New-AzVMCreation -pipName "" -EnablePublicIP $false `
+-Vmname "" -VNetName $VNetName1 -SubnetName $SubnetName2 `
 -ResourceGroupName $ResourceGroupName -Location $Location1 `
 -Image $Image -Credential $vmcred 
