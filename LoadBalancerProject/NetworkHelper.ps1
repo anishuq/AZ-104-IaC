@@ -35,4 +35,14 @@ function New-AzVNetSubnetCreation{
     #assign nsg to web subnet
     $webSubnetConfig.NetworkSecurityGroup = $webNSG
 
+    $VnetParameters = @{
+        Name              = $vnetName
+        ResourceGroupName = $ResourceGroupName
+        Location          = $Location
+        AddressPrefix     = $vnetAddressPrefix
+        Subnet            = $jumpboxSubnetConfig, $webSubnetConfig
+    }
+    #create the VNET   
+    $vnetObj = New-AzVirtualNetwork @VnetParameters
+
 }
