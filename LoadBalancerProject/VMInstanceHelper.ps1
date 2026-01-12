@@ -1,6 +1,5 @@
 Write-Host "VM Instance Helper Loaded!"
 
-
 function New-AzVMCreation{
     param (
         [string]$pipName,
