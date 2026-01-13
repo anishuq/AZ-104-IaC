@@ -82,6 +82,11 @@ Rules updated (v6)"
 root@jumpbox-vm:/home/admanisulhuq# sudo systemctl restart xrdp >>> No Output
 
 
+admanisulhuq@74.235.238.191
+McIe@4-5WmFvM
 
+Once you are in the jumpbox VM and run the command nano
+script.sh, this will open the nano text editor and you have to
+paste the following script:
 
 

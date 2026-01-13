@@ -1,0 +1,7 @@
+ssh admanisulhuq@172.190.74.167
+
+McIe@4-5WmFvM
+
+HelloServer-vm01 > 10.0.1.4
+HelloServer-vm02 > 10.0.1.5
+HelloServer-vm03 > 10.0.1.6
