@@ -1,0 +1,1 @@
+Write-Host "Private DNS Helper Loaded!"
