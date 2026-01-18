@@ -20,7 +20,8 @@ New-AzAppServicePlan -Name $AppServicePlanName -Location $Location `
 New-AzWebApp -ResourceGroupName $ResourceGroupName `
 -Name $AppServiceInstance `
 -Location $Location `
--AppServicePlan $AppServicePlanName 
+-AppServicePlan $AppServicePlanName `
+
 
 
 Write-Host "Web App deployed successfully! We are also in github now"
