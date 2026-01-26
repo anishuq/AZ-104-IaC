@@ -2,6 +2,7 @@
 . "$PSScriptRoot\BastionHelper.ps1"
 . "$PSScriptRoot\VMInstanceHelper.ps1"
 . "$PSScriptRoot\PipHelper.ps1"
+. "$PSScriptRoot\FWHelper.ps1"
 
 # Define Resource Group Name
 $ResourceGroupName = "BastionFW-rg"
@@ -66,8 +67,13 @@ $vmObj = New-AzVMInstanceCreation -ResourceGroupName $ResourceGroupName `
 
 
 #Create the Bastion
+<# Takes a long time, hence stopped for a bit.
 $bastionObj = New-AzBastionCreation -ResourceGroupName $ResourceGroupName `
     -Location $Location1 `
     -BastionName "MyBastionHost" `
     -VNetObj $vnetObj 
+#>
 
+#create FW
+New-AzFWCreation -ResourceGroupName $ResourceGroupName -Location $Location1 `
+                -FWPipName "FwPip" -FWName "EgressFW" -RTName "RTEgress" -vnetObj $vnetObj
