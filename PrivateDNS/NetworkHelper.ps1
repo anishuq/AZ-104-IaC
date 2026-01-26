@@ -1,3 +1,6 @@
+. "$PSScriptRoot\PrivateDNSHelper.ps1"
+. "$PSScriptRoot\VMInstanceHelper.ps1"
+
 Write-Host "Network Helper Loaded!"
 
 
@@ -41,4 +44,25 @@ function New-AzVNetsCreation{
     #create the VNET   
     $DemoVNet2Obj = New-AzVirtualNetwork @DemoVNet2Parameters
 
+    Write-Host "We want to know the full type name of the VNET obj: $($DemoVNet2Obj.GetType().FullName)"
+
+    #create 2 VMs in these 2 VNETS
+    $Image = "Canonical:0001-com-ubuntu-server-jammy:22_04-lts:latest"
+    $username = "admanisulhuq" #enter username for all VM
+    $plainPassword = "McIe@4-5WmFvM" #enter password for VM
+    $password = ConvertTo-SecureString $plainPassword -AsPlainText -Force
+    $vmcred = New-Object System.Management.Automation.PSCredential ($username, $password)
+
+    New-AzVMCreation -pipName "pip" -EnablePublicIP $true -Vmname "demovnet1vm01" -VNetName $vnetName1 `
+        -SubnetName $subnet.Name -ResourceGroupName $ResourceGroupName -Location $Location `
+        -Image $Image -Credential $vmcred
+
+    New-AzVMCreation -pipName "" -EnablePublicIP $false -Vmname "demovnet2vm01" -VNetName $vnetName2 `
+        -SubnetName $subnet2.Name -ResourceGroupName $ResourceGroupName -Location $Location `
+        -Image $Image -Credential $vmcred
+
+
+    #sending VNET onjects and link private zones
+    New-AzPrivateDNSZoneCreation -ResourceGroupName $ResourceGroupName -Location $Location `
+    -vnetObj1 $DemoVNet1Obj -vnetObj2 $DemoVNet2Obj -zoneName "anisulprivatezone.com"
 }
