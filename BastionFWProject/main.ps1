@@ -67,12 +67,13 @@ $vmObj = New-AzVMInstanceCreation -ResourceGroupName $ResourceGroupName `
 
 
 #Create the Bastion
-<# Takes a long time, hence stopped for a bit.
+<# Takes a long time, hence stopped for a bit. #>
+Write-Host "Creating Bastion Host. This might take some time..."
 $bastionObj = New-AzBastionCreation -ResourceGroupName $ResourceGroupName `
     -Location $Location1 `
     -BastionName "MyBastionHost" `
     -VNetObj $vnetObj 
-#>
+
 
 #create FW
 New-AzFWCreation -ResourceGroupName $ResourceGroupName -Location $Location1 `

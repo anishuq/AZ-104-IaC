@@ -33,5 +33,11 @@ function New-AzVMInstanceCreation{
     $vmObj = New-AzVM @vmParameters
 
     Write-Host "VM obj type:  $($vmObj.GetType().FullName)"
+
+    Write-Host "Change this VM's DNS settings to use Google's DNS server (8.8.8.8)"
+    $nicObj = Get-AzNetworkInterface -ResourceGroupName $ResourceGroupName -Name $vmObj.Name
+    $nicObj.DnsSettings.DnsServers.Add("8.8.8.8")
+    Set-AzNetworkInterface -NetworkInterface $nicObj
+
     return $vmObj
 }

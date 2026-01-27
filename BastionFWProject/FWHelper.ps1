@@ -77,7 +77,14 @@ function New-AzFWCreation{
     Set-AzFirewall -AzureFirewall $FWObj
 
 
-    #Now we are going to create DNS rule for the VM
-    $DNSnetRule01 = New-AzFirewallNetworkRule -Name "AllowDNS" -SourceAddress $vnetObj.Subnets[0].AddressPrefix `
-                                            
+    #Now we are going to create DNS rule for the workloadsubnet 
+    $DNSnetRule01 = New-AzFirewallNetworkRule -Name "AllowDNSRule" -SourceAddress $vnetObj.Subnets[0].AddressPrefix `
+                                                -DestinationPort 53 -Protocol UDP -DestinationAddress "8.8.8.8"
+
+    $netRuleCollection = New-AzFirewallNetworkRuleCollection -Name "NetRuleCollection" -Priority 100 `
+                                                                -Rule $DNSnetRule01 -ActionType Allow
+
+    $FWObj.NetworkRuleCollections.Add($netRuleCollection)
+
+    Set-AzFirewall -AzureFirewall $FWObj
 }
