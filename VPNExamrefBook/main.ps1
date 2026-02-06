@@ -59,7 +59,7 @@ $pipObj = New-AzPublicIPCreation -ResourceGroupName $ResourceGroupName `
     -AllocationMethod "Dynamic"
 
 
-<#
+
 $vmObj = New-AzVMInstanceCreation -ResourceGroupName $ResourceGroupName `
     -Location $Location1 `
     -VMName $VMName `
@@ -69,4 +69,4 @@ $vmObj = New-AzVMInstanceCreation -ResourceGroupName $ResourceGroupName `
     -PublicIpAddress $pipObj `
     -Credential $vmcred 
 
-Write-Host "VM obj type:  $($vmObj.GetType().FullName)" #>
+#Write-Host "VM obj type:  $($vmObj.GetType().FullName)" 

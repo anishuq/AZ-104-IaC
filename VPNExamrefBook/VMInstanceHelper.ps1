@@ -38,6 +38,8 @@ function New-AzVMInstanceCreation{
     # 2. Attach the NIC ID (The glue)
     $vmConfigObj = Add-AzVMNetworkInterface -VM $vmConfigObj -Id $nicObj.Id
 
+    
+    
     # 3. Set the OS Image
     #$Image = "MicrosoftWindowsServer:WindowsServer:2019-Datacenter:latest"
     # Since you defined $Image earlier as a string, we split it here
@@ -49,13 +51,25 @@ function New-AzVMInstanceCreation{
         -Skus $imageParts[2] `
         -Version $imageParts[3]
 
-    # 4. Set OS Disk and Credentials
-    $vmConfigObj = Set-AzVMOSDisk -VM $vmConfigObj -CreateOption FromImage -ManagedDiskSizeInGB 128
-    $vmConfigObj = Set-AzVMBootDiagnostic -VM $vmConfigObj -ManagedGraphStorageAccount
+    # 4. Set Operating System (THIS WAS MISSING!)
+    $vmConfigObj = Set-AzVMOperatingSystem -VM $vmConfigObj `
+        -Windows `
+        -ComputerName $VMName `
+        -Credential $Credential `
+        -ProvisionVMAgent `
+        -EnableAutoUpdate    
 
-    $vmObj = New-AzVM -ResourceGroupName $ResourceGroupName -Location $Location -VM $vmConfigObj -Credential $Credential
+    # 4. Set OS Disk and Credentials
+    $vmConfigObj = Set-AzVMOSDisk -VM $vmConfigObj -CreateOption FromImage -DiskSizeInGB 128
+    $vmConfigObj = Set-AzVMBootDiagnostic -VM $vmConfigObj -Enable
+
+    Write-Host "Finally we are going to CREATE the OS now"
+    $vmObj = New-AzVM -ResourceGroupName $ResourceGroupName -Location $Location -VM $vmConfigObj
 
     Write-Host "VM obj type:  $($vmObj.GetType().FullName)"
 
+    Write-Host "We want to be here with NO Error!"
+
     return $vmObj
+    
 }
