@@ -13,7 +13,7 @@ function New-AzVNetSubnetsCreation{
     #print all the params
     
     foreach ($key in $PSBoundParameters.Keys) {
-        Write-Host "Parameter '$key' was set to: $($PSBoundParameters[$key])"
+        Write-Host "Parameter '$key' was set to: $($PSBoundParameters[$key]) and Type: $($PSBoundParameters.Keys.GetType().Name)"
     } 
 
     #crete the subnetconfigs
