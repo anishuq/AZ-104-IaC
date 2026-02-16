@@ -7,7 +7,7 @@ This script will create a VM instance in a specified VNet and Subnet.
 . "$PSScriptRoot\PIPHelper.ps1"
 
 # Define Resource Group Name
-$ResourceGroupName = "AZ104-VPNGateway"
+$ResourceGroupName = "AZ104-VPNGatewayOnPrem"
 
 # Define Location
 $Location1 = "eastus"
@@ -44,7 +44,7 @@ Write-Host "VNET obj type:  $($vnetObj.GetType().FullName)"
 $Image = "MicrosoftWindowsServer:WindowsServer:2019-Datacenter:latest"
 
 $username = "admanisulhuq" #enter username for all VM
-$plainPassword = "McIe@4-5WmFvM" #enter password for VM
+$plainPassword = "McIe@45WmFvM" #enter password for VM
 $password = ConvertTo-SecureString $plainPassword -AsPlainText -Force
 $vmcred = New-Object System.Management.Automation.PSCredential ($username, $password)
 
@@ -69,4 +69,4 @@ $vmObj = New-AzVMInstanceCreation -ResourceGroupName $ResourceGroupName `
     -PublicIpAddress $pipObj `
     -Credential $vmcred 
 
-#Write-Host "VM obj type:  $($vmObj.GetType().FullName)" 
+Write-Host "VM obj type:  $($vmObj.GetType().FullName)" 

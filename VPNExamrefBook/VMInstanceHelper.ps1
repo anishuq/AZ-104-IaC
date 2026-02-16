@@ -63,7 +63,7 @@ function New-AzVMInstanceCreation{
     $vmConfigObj = Set-AzVMOSDisk -VM $vmConfigObj -CreateOption FromImage -DiskSizeInGB 128
     $vmConfigObj = Set-AzVMBootDiagnostic -VM $vmConfigObj -Enable
 
-    Write-Host "Finally we are going to CREATE the OS now"
+    Write-Host "Finally we are going to CREATE the VM now"
     $vmObj = New-AzVM -ResourceGroupName $ResourceGroupName -Location $Location -VM $vmConfigObj
 
     Write-Host "VM obj type:  $($vmObj.GetType().FullName)"
