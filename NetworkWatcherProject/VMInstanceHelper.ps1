@@ -13,7 +13,7 @@ function New-AzVMInstanceCreation{
     #print all the params
     
     foreach ($key in $PSBoundParameters.Keys) {
-        Write-Host "Parameter '$key' was set to: $($PSBoundParameters[$key]) and Type: $($PSBoundParameters.Keys.GetType().Name)"
+        Write-Host "Parameter '$key' was set to: $($PSBoundParameters[$key]) and Type: $($PSBoundParameters[$key].GetType().Name)"
     }
     Write-Host "DEBUG: the VNet $($VnetObj.Name) with Prefix $($VnetObj.AddressSpace.AddressPrefixes)"
     
