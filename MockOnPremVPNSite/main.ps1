@@ -16,8 +16,7 @@ $Location1 = "eastus"
 # The VNET and subnet for VPNGW has been created via the portal.
 $VNetName1 = "vpnvnet"
 $AddressPrefix1 = "99.0.0.0/24"
-
-
+  
 $SubnetName1 = "vnpsubnet"
 $SubnetAddressPrefix1 = "99.0.0.0/24"
 
