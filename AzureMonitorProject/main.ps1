@@ -1,5 +1,6 @@
 . "$PSScriptRoot/NetworkHelper.ps1"
 . "$PSScriptRoot/VMInstanceHelper.ps1"
+. "$PSScriptRoot/StorageAccountHelper.ps1"
 
 $ResourceGroupName = "AZ104-Monitor"
 
@@ -51,3 +52,10 @@ $vmObj = New-AzVMInstanceCreation -ResourceGroupName $ResourceGroupName `
                                     -Credential $vmCred
 
 Write-Host "VM obj type:  $($vmObj.GetType().FullName)"
+
+
+$strAccObj = New-StorageAccountCreation -ResourceGroupName $ResourceGroupName `
+                                        -Location $Location1 `
+                                        -VmName $vmObj.Name
+
+Write-Host "Storage Account obj type:  $($strAccObj.GetType().FullName)"
