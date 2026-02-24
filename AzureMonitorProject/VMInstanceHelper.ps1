@@ -26,6 +26,7 @@ function New-AzVMInstanceCreation{
         VirtualNetworkName= $VnetObj.Name
         SubnetName        = $VnetObj.Subnets[0].Name
         SubnetAddressPrefix = $VnetObj.Subnets[0].AddressPrefix[0]
+        PublicIpAddressName = "MonitorServerPip"
         OpenPorts         = 3389
         Credential        = $Credential
         }
