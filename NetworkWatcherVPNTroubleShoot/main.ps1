@@ -55,3 +55,16 @@ $vpnGWObj = New-AzVPNGWCreation -vnetObj $vnetObj `
 Write-Host "VPN GW obj type:  $($vpnGWObj.GetType().FullName)"
 
 #call LNGW and connection creation function. The on-prem public IP and address prefix are dummy values as we are not creating actual connection in this lab.
+if ($vpnGWObj.ProvisioningState -eq "Succeeded") {
+                $ConnectionObj = New-AzLNGWCreation -onPremPublicIP "40.87.101.31" `
+                   -onPremAddressPrefix "98.0.0.0/24" `
+                   -vpnGWObj $vpnGWObj `
+                   -ResourceGroupName $ResourceGroupName `
+                   -Location $Location1 `
+                   -sharedKey "McIe@45WmFvM"
+
+    Write-Host "Connection obj type:  $($ConnectionObj.GetType().FullName)"
+}
+else {
+    Write-Host "Action Required: Gateway is in $($vpnGWObj.ProvisioningState) state. Please wait for 'Succeeded' before running." -ForegroundColor Yellow
+}
