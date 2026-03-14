@@ -21,6 +21,8 @@ try {
         # Connect with appropriate scopes
         Connect-Entra -Scopes User.ReadWrite.All, Directory.ReadWrite.All, RoleManagement.ReadWrite.Directory
 
+        Get-EntraContext | Select-Object -ExpandProperty Scopes | Sort-Object
+
         Write-Host "Connected successfully!" -ForegroundColor Green
     }
     else {
@@ -31,11 +33,11 @@ try {
     Show-UserList
     
     # Step 4: Create a new user (optional)
-    Create-NewUser -displayName "Jenny Hall" `
-                   -userPrincipalName "JennyHall@CyberSecurityStudent.onmicrosoft.com" `
-                   -mailNickname "JennyHallmail" `
+    <#Create-NewUser -displayName "James Hall" `
+                   -userPrincipalName "JamesHall@CyberSecurityStudent.onmicrosoft.com" `
+                   -mailNickname "JamesHallmail" `
                    -password (ConvertTo-SecureString "Pa5sWoRd" -AsPlainText -Force)
-    
+    #>
     #At the end of the script, disconnect from Entra ID    
     Disconnect-Entra -ErrorAction SilentlyContinue
 }
