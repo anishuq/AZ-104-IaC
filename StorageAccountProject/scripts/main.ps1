@@ -1,0 +1,28 @@
+$ResourceGroupName = "az104StorageAccount-rg"
+$Location = "East US"
+
+Connect-AzAccount
+
+$SubscriptionId = "ff62842a-5857-4d36-9ab5-4fe04c591ad2"
+Select-AzSubscription -SubscriptionId $SubscriptionId
+
+New-AzResourceGroup -Name $ResourceGroupName -Location $Location
+
+$uniqueString = [DateTimeOffset]::UtcNow.ToUnixTimeSeconds()
+
+$storageAccountObj = New-AzStorageAccount -ResourceGroupName $ResourceGroupName `
+                    -Name "storageaccount$uniqueString" `
+                    -Location $Location `
+                    -SkuName "Standard_LRS" `
+                    -Kind "StorageV2" `
+                    -AccessTier "Hot" `
+                    -MinimumTlsVersion "TLS1_2" `
+                    -AllowBlobPublicAccess $false `
+                    -EnableHttpsTrafficOnly $true
+
+$storageAccountObj | Select-Object -Property StorageAccountName, Kind, MinimumTlsVersion, EnableHttpsTrafficOnly
+                    
+
+
+# Clean up resources
+Remove-AzResourceGroup -ResourceGroupName $ResourceGroupName
