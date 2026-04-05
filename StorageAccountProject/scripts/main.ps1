@@ -19,8 +19,8 @@ $storageAccountObj = New-AzStorageAccount -ResourceGroupName $ResourceGroupName 
                     -Kind "StorageV2" `
                     -AccessTier "Hot" `
                     -MinimumTlsVersion "TLS1_2" `
-                    -AllowBlobPublicAccess $false `
-                    -EnableHttpsTrafficOnly $true
+                    -EnableHttpsTrafficOnly $true `
+                    -AllowBlobPublicAccess $true
 
 $storageAccountObj | Select-Object -Property StorageAccountName, Kind, MinimumTlsVersion, EnableHttpsTrafficOnly
                     
