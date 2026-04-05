@@ -1,3 +1,5 @@
+. "$PSScriptRoot\BlobHelper.ps1"
+
 $ResourceGroupName = "az104StorageAccount-rg"
 $Location = "East US"
 
@@ -22,7 +24,16 @@ $storageAccountObj = New-AzStorageAccount -ResourceGroupName $ResourceGroupName 
 
 $storageAccountObj | Select-Object -Property StorageAccountName, Kind, MinimumTlsVersion, EnableHttpsTrafficOnly
                     
+Write-Host "Storage Account obj type:  $($storageAccountObj.GetType().FullName)"
+# Microsoft.Azure.Commands.Management.Storage.Models.PSStorageAccount
 
+New-AzBlobContainerCreation -StrAccObj $storageAccountObj -ResourceGroupName $ResourceGroupName
+
+
+$storageAccountContext = $storageAccountObj.Context
+
+Write-Host "Storage Account CONTEXT type:  $($storageAccountContext.GetType().FullName)"
+#Microsoft.WindowsAzure.Commands.Common.Storage.LazyAzureStorageContext
 
 # Clean up resources
 Remove-AzResourceGroup -ResourceGroupName $ResourceGroupName
