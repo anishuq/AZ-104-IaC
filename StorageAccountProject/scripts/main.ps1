@@ -1,4 +1,5 @@
 . "$PSScriptRoot\BlobHelper.ps1"
+. "$PSScriptRoot\AzCopyHelper.ps1"
 
 $ResourceGroupName = "az104StorageAccount-rg"
 $Location = "East US"
