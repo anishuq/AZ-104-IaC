@@ -39,6 +39,6 @@ function Create-NewUser {
     }
     else {
             Write-Host "User with UPN '$userPrincipalName' already exists: $($existingUser.DisplayName)" -ForegroundColor Yellow
->>>>>>> b59cdc98cb2682365e681d695c81c0318dff5e75
+
     }
 }
