@@ -1,5 +1,6 @@
 . "$PSScriptRoot\BlobHelper.ps1"
-. "$PSScriptRoot\AzCopyHelper.ps1"
+. "$PSScriptRoot\AzCopyAccSASHelper.ps1"
+. "$PSScriptRoot\AzCopyServiceSASHelper.ps1"
 
 $ResourceGroupName = "az104StorageAccount-rg"
 $Location = "East US"
@@ -32,8 +33,7 @@ New-AzBlobContainerCreation -StrAccObj $storageAccountObj -ResourceGroupName $Re
 
 
 $storageAccountContext = $storageAccountObj.Context
-
-Write-Host "Storage Account CONTEXT type:  $($storageAccountContext.GetType().FullName)"
+Write-Host "Storage Account CONTEXT type in MAIN when storageAccountObj.Context :  $($storageAccountContext.GetType().FullName)"
 #Microsoft.WindowsAzure.Commands.Common.Storage.LazyAzureStorageContext
 
 # Clean up resources

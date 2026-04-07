@@ -1,5 +1,0 @@
-function New-AzCopyOperations {
-    
-
-    
-}
