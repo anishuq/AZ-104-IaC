@@ -12,16 +12,18 @@ function New-AzCopyServiceSASOperations {
     $expiryTime = $startTime.AddHours(24)
 
     $sourceSASToken = New-AzStorageContainerSASToken -Name $azcopysourcecontainer.Name `
-                                                    -Permission rl ` #this line is absolutely crucial
+                                                    -Permission rl `
                                                     -StartTime $startTime `
                                                     -ExpiryTime $expiryTime `
                                                     -Context $ctx
+     #the PERMISSION line is absolutely crucial
 
     $destinationSASToken = New-AzStorageContainerSASToken -Name $azcopydestinationcontainer.Name `
-                                                    -Permission rwdlac ` #this line is absolutely crucial
+                                                    -Permission rwdlac `
                                                     -StartTime $startTime `
                                                     -ExpiryTime $expiryTime `
                                                     -Context $ctx
+    #the PERMISSION line is absolutely crucial
 
     $sourceURL = "https://$($StorageAccObj.StorageAccountName).blob.core.windows.net/$($azcopysourcecontainer.Name)?$sourceSASToken"
     $destinationURL = "https://$($StorageAccObj.StorageAccountName).blob.core.windows.net/$($azcopydestinationcontainer.Name)?$destinationSASToken"
