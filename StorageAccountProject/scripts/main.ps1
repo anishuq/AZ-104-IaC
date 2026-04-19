@@ -1,6 +1,7 @@
 . "$PSScriptRoot\BlobHelper.ps1"
 . "$PSScriptRoot\AzCopyAccSASHelper.ps1"
 . "$PSScriptRoot\AzCopyServiceSASHelper.ps1"
+. "$PSScriptRoot\FileStorageHelper.ps1"
 
 $ResourceGroupName = "az104StorageAccount-rg"
 $Location = "East US"
@@ -14,27 +15,34 @@ New-AzResourceGroup -Name $ResourceGroupName -Location $Location
 
 $uniqueString = [DateTimeOffset]::UtcNow.ToUnixTimeSeconds()
 
-$storageAccountObj = New-AzStorageAccount -ResourceGroupName $ResourceGroupName `
-                    -Name "storageaccount$uniqueString" `
-                    -Location $Location `
-                    -SkuName "Standard_LRS" `
-                    -Kind "StorageV2" `
-                    -AccessTier "Hot" `
-                    -MinimumTlsVersion "TLS1_2" `
-                    -EnableHttpsTrafficOnly $true `
-                    -AllowBlobPublicAccess $true
+$type = Read-Host "Do you want Azure Azure File Storage only? (Y/N)"
+if (($type -eq "Y") -or ($type -eq "y")) {
+        New-AzFileStorageCreation -ResourceGroupName $ResourceGroupName -Location $Location -uniqueString $uniqueString
+        Write-Host "Azure File Storage created and now we cleanup and exit."
+    }
+else{
 
-$storageAccountObj | Select-Object -Property StorageAccountName, Kind, MinimumTlsVersion, EnableHttpsTrafficOnly
-                    
-Write-Host "Storage Account obj type:  $($storageAccountObj.GetType().FullName)"
-# Microsoft.Azure.Commands.Management.Storage.Models.PSStorageAccount
+        $storageAccountObj = New-AzStorageAccount -ResourceGroupName $ResourceGroupName `
+                            -Name "storageaccount$uniqueString" `
+                            -Location $Location `
+                            -SkuName "Standard_LRS" `
+                            -Kind "StorageV2" `
+                            -AccessTier "Hot" `
+                            -MinimumTlsVersion "TLS1_2" `
+                            -EnableHttpsTrafficOnly $true `
+                            -AllowBlobPublicAccess $true
 
-New-AzBlobContainerCreation -StrAccObj $storageAccountObj -ResourceGroupName $ResourceGroupName
+        $storageAccountObj | Select-Object -Property StorageAccountName, Kind, MinimumTlsVersion, EnableHttpsTrafficOnly
+        
+        Write-Host "Storage Account obj type:  $($storageAccountObj.GetType().FullName)"
+        # Microsoft.Azure.Commands.Management.Storage.Models.PSStorageAccount
+
+        New-AzBlobContainerCreation -StrAccObj $storageAccountObj -ResourceGroupName $ResourceGroupName
 
 
-$storageAccountContext = $storageAccountObj.Context
-Write-Host "Storage Account CONTEXT type in MAIN when storageAccountObj.Context :  $($storageAccountContext.GetType().FullName)"
-#Microsoft.WindowsAzure.Commands.Common.Storage.LazyAzureStorageContext
-
+        $storageAccountContext = $storageAccountObj.Context
+        Write-Host "Storage Account CONTEXT type in MAIN when storageAccountObj.Context :  $($storageAccountContext.GetType().FullName)"
+        #Microsoft.WindowsAzure.Commands.Common.Storage.LazyAzureStorageContext
+}
 # Clean up resources
 Remove-AzResourceGroup -ResourceGroupName $ResourceGroupName

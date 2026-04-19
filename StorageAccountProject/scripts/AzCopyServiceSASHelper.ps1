@@ -16,6 +16,7 @@ function New-AzCopyServiceSASOperations {
                                                     -StartTime $startTime `
                                                     -ExpiryTime $expiryTime `
                                                     -Context $ctx
+
     #the PERMISSION line is absolutely crucial
 
     $destinationSASToken = New-AzStorageContainerSASToken -Name $azcopydestinationcontainer.Name `
