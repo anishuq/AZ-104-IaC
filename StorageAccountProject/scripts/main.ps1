@@ -15,9 +15,21 @@ New-AzResourceGroup -Name $ResourceGroupName -Location $Location
 
 $uniqueString = [DateTimeOffset]::UtcNow.ToUnixTimeSeconds()
 
+
+$accessTier = Read-Host "Enter access tier for the storage account (Hot/Cool/Archive)"
+$accessTier = $accessTier.Trim().ToLower()
+
+# Validate against allowed values
+$validTiers = @("hot", "cool", "archive")
+
+if ($accessTier -notin $validTiers) {
+    Write-Warning "Invalid input: '$accessTier'. Setting access tier to 'Hot' by default."
+    $accessTier = "hot"
+}
+
 $type = Read-Host "Do you want Azure Azure File Storage only? (Y/N)"
 if (($type -eq "Y") -or ($type -eq "y")) {
-        New-AzFileStorageCreation -ResourceGroupName $ResourceGroupName -Location $Location -uniqueString $uniqueString
+        New-AzFileStorageCreation -ResourceGroupName $ResourceGroupName -Location $Location -uniqueString $uniqueString -accessTier $accessTier
         Write-Host "Azure File Storage created and now we cleanup and exit."
     }
 else{
@@ -27,7 +39,7 @@ else{
                             -Location $Location `
                             -SkuName "Standard_LRS" `
                             -Kind "StorageV2" `
-                            -AccessTier "Hot" `
+                            -AccessTier $accessTier `
                             -MinimumTlsVersion "TLS1_2" `
                             -EnableHttpsTrafficOnly $true `
                             -AllowBlobPublicAccess $true

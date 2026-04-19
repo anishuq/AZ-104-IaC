@@ -4,7 +4,8 @@ function New-AzFileStorageCreation {
     param(
         [string]$ResourceGroupName,
         [string]$Location,
-        [string]$uniqueString
+        [string]$uniqueString,
+        [string]$accessTier
     )
 
     $storageAccountObj = New-AzStorageAccount -ResourceGroupName $ResourceGroupName `
@@ -12,7 +13,7 @@ function New-AzFileStorageCreation {
                     -Location $Location `
                     -SkuName "Standard_LRS" `
                     -Kind "StorageV2" `
-                    -AccessTier "Hot" `
+                    -AccessTier $accessTier `
                     -MinimumTlsVersion "TLS1_2" `
                     -EnableHttpsTrafficOnly $true `
                     -AllowBlobPublicAccess $false 
