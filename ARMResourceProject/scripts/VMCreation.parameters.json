@@ -1,0 +1,34 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "location": {
+            "value": "eastus"
+        },
+        "vmName": {
+            "value": "myVM160980"
+        },
+        "vmSize": {
+            "value": "Standard_DS1_v2"
+        },
+        "adminUsername": {
+            "value": "adm.anisulhuq"
+        },
+        "adminPassword": {
+            "value": "McIe@4:5WmFvM" 
+        },
+        "OSVersion": {
+            "value": "2019-Datacenter"
+        },
+        
+        "publicIpSku": {
+            "value": "Standard"
+        },
+        "publicIPAllocationMethod": {
+            "value": "Static"
+        },
+        "securityType": {
+            "value": "Standard"
+        }
+    }
+}
