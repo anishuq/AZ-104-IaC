@@ -1,0 +1,65 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "skuName": {
+            "type": "string",
+            "allowedValues": [
+                "Standard_LRS", "Standard_GRS", "Standard_RAGRS", "Standard_ZRS",
+                "Premium_LRS"
+            ],
+            "metadata": { "description": "Storage SKU" }
+        }
+
+    },
+    "functions": [{
+        "namespace": "storageaccountconnectionstring",
+        "members": {
+            "connectionstrgenerator": {
+                "parameters": [
+                    {
+                        "name": "initalpart",
+                        "type": "string"
+                    },
+                    {
+                        "name": "storageAccountName",
+                        "type": "string"
+                    },
+                    {
+                        "name": "storageAccountKey",
+                        "type": "string"
+                    }
+                ],
+                "output": {
+                    "value": "[concat('This is inside the user defrined function---> ',parameters('initalpart'), parameters('storageAccountName'), ';AccountKey=', parameters('storageAccountKey'))]",
+                    "type": "string"
+                }
+            }
+        }
+    }],
+    "variables": {
+        "storageAccountName": "[toLower(concat('st', uniqueString(resourceGroup().id)))]",
+        "location": "[resourceGroup().location]",
+        "initialpart": "DefaultEndpointsProtocol=https;AccountName="
+    },
+    "resources": [
+       {
+        "name": "[variables('storageAccountName')]",
+        "type": "Microsoft.Storage/storageAccounts",
+        "apiVersion": "2023-05-01",
+        "tags": {
+            "displayName": "[variables('storageAccountName')]"
+        },
+        "location": "[variables('location')]",
+        "kind": "StorageV2",
+        "sku": { "name": "[parameters('skuName')]" }
+       }
+    ],
+    "outputs": {
+        "firstmasterKey": {
+        "type": "string",
+        "value": "[storageaccountconnectionstring.connectionstrgenerator(variables('initialpart'), variables('storageAccountName'),listKeys(resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')), '2023-05-01').keys[0].value)]"
+        }
+    }
+}
+

@@ -10,10 +10,21 @@ Select-AzSubscription -SubscriptionId $SubscriptionId
 #The reasource group will be in East US.
 New-AzResourceGroup -Name $ResourceGroupName -Location $Location
 
+$templateRoot = Read-Host "Enter the name of the ARM template file without the extension (e.g. VMCreation) "
+
+if (Test-Path -Path ".\scripts\$templateRoot.json") {
+    Write-Host "template file '$templateRoot' exists. Executing .... " -ForegroundColor Green
+}
+else {
+    Write-Host "template file '$templateRoot' does not exist. Aborting." -ForegroundColor Red
+    exit
+}
+
+
 $result = Test-AzResourceGroupDeployment `
   -ResourceGroupName $ResourceGroupName `
-  -TemplateFile ".\scripts\VMCreation.json" `
-  -TemplateParameterFile ".\scripts\VMCreation.parameters.json" `
+  -TemplateFile ".\scripts\$templateRoot.json" `
+  -TemplateParameterFile ".\scripts\$templateRoot.parameters.json" `
   -Verbose
 
 <# Step 2 - drill into each level
@@ -28,9 +39,9 @@ if ($null -eq $result) {
 
     New-AzResourceGroupDeployment `
             -ResourceGroupName $ResourceGroupName `
-            -TemplateFile ".\scripts\VMCreation.json" `
-            -TemplateParameterFile ".\scripts\VMCreation.parameters.json" `
-            -Name "VMCreationDeployment" `
+            -TemplateFile ".\scripts\$templateRoot.json" `
+            -TemplateParameterFile ".\scripts\$templateRoot.parameters.json" `
+            -Name "$templateRoot-Deployment" `
             -Verbose
 } else {
     Write-Host "❌ Template is INVALID" -ForegroundColor Red
