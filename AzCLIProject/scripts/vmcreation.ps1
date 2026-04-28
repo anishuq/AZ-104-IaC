@@ -1,3 +1,5 @@
+. "$PSScriptRoot\cleanup.ps1"
+
 <#
 We are going to mix AZ CLI and PowerShell in this script, 
 so we need to set the execution policy to allow running scripts.
@@ -34,12 +36,38 @@ az vm create --resource-group $ResourceGroupName `
              --nsg-rule SSH
 
 $winImage = "MicrosoftWindowsServer:WindowsServer:2019-Datacenter:latest"
+$winVMName = "azclivmwin01"
+
 
 az vm create --resource-group $ResourceGroupName `
-             --name "azclivmwin01" `
+             --name $winVMName `
              --image $winImage `
              --admin-username "admanisulhuq" `
              --admin-password "McIe4@5WmFvMwiN" `
              --size "Standard_B2s" `
              --public-ip-address "azclivmwin01pip" `
              --nsg-rule RDP
+
+<# From this point on we will only work with the Windows VM#>
+Write-Host "We have to WAIT until $winVMName has been CREATED ...."
+az vm wait --resource-group $ResourceGroupName --name $winVMName --created
+
+
+# Give the guest agent time to initialize
+Start-Sleep -Seconds 60
+
+
+Write-Host "Checking the VM Extension status of $winVMName"
+az vm get-instance-view --resource-group $ResourceGroupName `
+                        --name $winVMName `
+                        --query "instanceView.vmAgent.statuses[0].message" -o tsv
+
+#install network watcher agent
+az vm extension set `
+  --resource-group $ResourceGroupName `
+  --vm-name $winVMName `
+  --name "NetworkWatcherAgentWindows" `
+  --publisher "Microsoft.Azure.NetworkWatcher" `
+  --no-auto-upgrade-minor-version
+
+Remove-AzResourceGroup -ResourceGroupName $ResourceGroupName
