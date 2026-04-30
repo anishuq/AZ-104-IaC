@@ -1,4 +1,6 @@
 . "$PSScriptRoot\cleanup.ps1"
+$settingsPath = "$PSScriptRoot\settings.json"
+
 
 <#
 We are going to mix AZ CLI and PowerShell in this script, 
@@ -26,8 +28,11 @@ $linuxImage = "Canonical:0001-com-ubuntu-server-jammy:22_04-lts:latest"
 az group create --name $ResourceGroupName --location $Location
 
 #this is a sample VM creation with AZ CLI, you can customize the parameters as needed.
+$linuxVMName = "azclivmlinux01"
+Write-Host "First we will create the VM $linuxVMName and afterwards separately attach a 128 GB Data Disk to it." --ForegroundColor Green
+
 az vm create --resource-group $ResourceGroupName `
-             --name "azclivmlinux01" `
+             --name $linuxVMName `
              --image $linuxImage `
              --admin-username "adm.anisulhuq" `
              --admin-password "McIe@4:5WmFvM" `
@@ -35,10 +40,20 @@ az vm create --resource-group $ResourceGroupName `
              --public-ip-address "azclivmlinux01pip" `
              --nsg-rule SSH
 
+az vm disk attach --resource-group $ResourceGroupName `
+              --vm-name $linuxVMName `
+              --name "azclivmlinux01datadisk" `
+              --size-gb 128 `
+              --sku "Premium_LRS" `
+              --new
+
+
 $winImage = "MicrosoftWindowsServer:WindowsServer:2019-Datacenter:latest"
 $winVMName = "azclivmwin01"
 
 
+
+Write-Host "We will now create the VM $winVMName and during creation attach a 128 GB Data Disk to it." --ForegroundColor Green
 az vm create --resource-group $ResourceGroupName `
              --name $winVMName `
              --image $winImage `
@@ -46,7 +61,8 @@ az vm create --resource-group $ResourceGroupName `
              --admin-password "McIe4@5WmFvMwiN" `
              --size "Standard_B2s" `
              --public-ip-address "azclivmwin01pip" `
-             --nsg-rule RDP
+             --nsg-rule RDP `
+             --data-disk-sizes-gb 128
 
 <# From this point on we will only work with the Windows VM#>
 Write-Host "We have to WAIT until $winVMName has been CREATED ...."
@@ -70,4 +86,14 @@ az vm extension set `
   --publisher "Microsoft.Azure.NetworkWatcher" `
   --no-auto-upgrade-minor-version
 
-Remove-AzResourceGroup -ResourceGroupName $ResourceGroupName
+
+
+az vm extension set `
+    --resource-group $ResourceGroupName `
+    --vm-name $winVMName `
+    --name CustomScriptExtension `
+    --publisher Microsoft.Compute `
+    --no-auto-upgrade-minor-version `
+    --settings "@$settingsPath"
+    
+Invoke-Cleanup -ResourceGroupName $ResourceGroupName

@@ -1,6 +1,6 @@
 
 
-function Remove-AzResourceGroup {
+function Invoke-Cleanup {
     param (
         [string]$ResourceGroupName
     )

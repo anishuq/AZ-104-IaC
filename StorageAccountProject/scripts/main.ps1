@@ -57,4 +57,4 @@ else{
         #Microsoft.WindowsAzure.Commands.Common.Storage.LazyAzureStorageContext
 }
 # Clean up resources
-Remove-AzResourceGroup -ResourceGroupName $ResourceGroupName
+Invoke-Cleanup -ResourceGroupName $ResourceGroupName
