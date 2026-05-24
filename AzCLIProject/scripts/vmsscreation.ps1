@@ -21,7 +21,7 @@ if ($context) {
     $SubscriptionId = "ff62842a-5857-4d36-9ab5-4fe04c591ad2"
     Select-AzSubscription -SubscriptionId $SubscriptionId
 }
-$ResourceGroupName = "AzCliInfrastructure-RG"
+$ResourceGroupName = "AzCliVMSSInfrastructure-RG"
 
 # We will create the resources in CanadaCentral, choosing EASTUS won't have any quota.
 $Location = "CanadaCentral"
@@ -41,8 +41,21 @@ az vmss create --resource-group $ResourceGroupName `
              --instance-count 2 `
              --admin-username "admanisulhuq" `
              --admin-password "McIe4@5WmFvMwiN" `
-             --license-type "None"
+             --license-type "None" 
 
+# All the VMs in the scale are NOT accessible via RDP by default, we need to add an extension to enable that.
+Write-Host "VMSS created and the VMSS has created $($vmssName)NSG by default"
+az network nsg rule create `
+             --resource-group $ResourceGroupName `
+             --nsg-name "$($vmssName)NSG" `
+             --name "RDP" `
+             --priority 1001 `
+             --destination-port-ranges 3389 `
+             --access Allow `
+             --protocol Tcp
+
+
+#We will use the Custom Script Extension to run a script on the VMSS instances that will install IIS and create a simple HTML page.
 az vmss extension set `
              --resource-group $ResourceGroupName `
              --vmss-name $vmssName `
@@ -51,13 +64,18 @@ az vmss extension set `
              --version "1.10" `
             --settings "@$settingsPath"
 
+
+# 1. Ensure the provider is registered (only needs to be done once per subscription)
+az provider register --namespace Microsoft.Insights
+
 #First create the autoscale setting, then add a scale-out and scale-in rule:
+$vmssId = (az vmss show --resource-group $ResourceGroupName --name $vmssName --query "id" -o tsv)
 $scalingSettingsName = "vmsscalesettings01"
 az monitor autoscale create `
                  --resource-group $ResourceGroupName `
                  --name $scalingSettingsName `
-                 --resource-type "Microsoft.Compute/virtualMachineScaleSets" `
-                 --resource $vmssName `
+                 --resource $vmssId `
+                 --location $Location `
                  --min-count 2 `
                  --max-count 5 `
                  --count 2
