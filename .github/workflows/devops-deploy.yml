@@ -4,7 +4,7 @@ on:
   push:
     branches:
       - master
-  workflow_dispatch: # Allows you to trigger it manually from GitHub if needed
+  workflow_dispatch:
 
 jobs:
   build-and-deploy:
@@ -15,10 +15,23 @@ jobs:
       - name: Checkout GitHub Repository
         uses: actions/checkout@v4
 
-      # 2. Package and Deploy ONLY the subfolder contents
-      - name: 'Deploy to Azure Web App'
+      # 2. Set up Python runtime
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      # 3. Install dependencies from AppServiceCodeProject
+      - name: Install dependencies
+        run: |
+          cd AppServiceCodeProject
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      # 4. Deploy ONLY the subfolder contents to Azure
+      - name: Deploy to Azure Web App
         uses: azure/webapps-deploy@v3
         with:
           app-name: 'az104-linuxwebapp-160980'
           publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
-          package: './AppServiceCodeProject' # Directs Azure to ignore the root/IaC folders
+          package: './AppServiceCodeProject'
