@@ -4,7 +4,9 @@ $ResourceGroupName = "az104-paas-linuxappservice-rg"
 # Define Location
 $Location = "canadacentral"
 $AppServicePlanName = "az104-linuxappserviceplan"
-$WebAppName = "az104-linuxwebapp-$(Get-Random)"
+#$WebAppName = "az104-linuxwebapp-$(Get-Random)"
+#Define Web App Name that is predictable.
+$WebAppName = "az104-linuxwebapp-160980"
 #Get-Random Returns a non-negative random integer between 0 and [Int32]::MaxValue (2,147,483,647).
 
 
@@ -26,6 +28,7 @@ $appServicePlan = New-AzAppServicePlan -Name $AppServicePlanName -ResourceGroupN
 #Create an web app in the App Service Plan
 New-AzWebApp -Name $WebAppName -ResourceGroupName $ResourceGroupName `
 -Location $Location -AppServicePlan $AppServicePlanName 
+#az104-linuxwebapp-505227657.azurewebsites.net
 
 $scalerule = New-AzAutoscaleScaleRuleObject -MetricTriggerMetricName "CpuPercentage" `
             -MetricTriggerOperator "GreaterThan" -MetricTriggerStatistic "Average" `
