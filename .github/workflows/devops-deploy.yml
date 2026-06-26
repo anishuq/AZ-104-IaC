@@ -1,0 +1,24 @@
+name: Deploy Web App Subfolder to Azure
+
+on:
+  push:
+    branches:
+      - master
+  workflow_dispatch: # Allows you to trigger it manually from GitHub if needed
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Pull down the repository code
+      - name: Checkout GitHub Repository
+        uses: actions/checkout@v4
+
+      # 2. Package and Deploy ONLY the subfolder contents
+      - name: 'Deploy to Azure Web App'
+        uses: azure/webapps-deploy@v3
+        with:
+          app-name: 'az104-linuxwebapp-160980'
+          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
+          package: './AppServiceCodeProject' # Directs Azure to ignore the root/IaC folders
