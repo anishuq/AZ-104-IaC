@@ -3,10 +3,10 @@
 . "$PSScriptRoot\VMInstanceHelper.ps1"
 
 # Define Resource Group Name
-$ResourceGroupName = "PrivateDNSZone-rg"
+$ResourceGroupName = "Sybex_ch_03-rg"
 
 # Define Location
-$Location1 = "eastus2"
+$Location1 = "canadacentral"
 
 # Define VNet and Subnet parameters
 $VNetName1 = "DemoVNet1"

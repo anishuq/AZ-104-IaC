@@ -64,5 +64,15 @@ function New-AzVNetsCreation{
 
     #sending VNET onjects and link private zones
     New-AzPrivateDNSZoneCreation -ResourceGroupName $ResourceGroupName -Location $Location `
-    -vnetObj1 $DemoVNet1Obj -vnetObj2 $DemoVNet2Obj -zoneName "anisulprivatezone.com"
+    -vnetObj1 $DemoVNet1Obj -vnetObj2 $DemoVNet2Obj -zoneName "vm-madeup-internal.com"
+    <#
+    DNS naming rules only allow:
+
+    Letters (a-z)
+    Numbers (0-9)
+    Hyphens (-)
+    -zoneName "vm-madeup-internal.com" is a VALID DNS name. 
+    It has letters, hyphens, and a dot. 
+    -zoneName "vm_madeup_internal.com" is NOT a valid DNS name. 
+    #>
 }
