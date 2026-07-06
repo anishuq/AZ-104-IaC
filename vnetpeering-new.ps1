@@ -4,7 +4,7 @@ This is all in preparation for VNET peering. Though the peering itself is not cr
 #>
 
 #create a new VNET
-$ResourceGroupName = "vnetpeering-rg"
+$ResourceGroupName = "sybex_ch_04-rg"
 
 $Location1 = "eastus"
 $Location2 = "westus"
