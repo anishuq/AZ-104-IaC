@@ -1,8 +1,8 @@
 #create a new VNET
-$ResourceGroupName = "vpn-p2s-rg"
+$ResourceGroupName = "Sybex_Ch04_vpn-p2s-rg"
 
 #creating VNET-1 in East US
-$Location1 = "eastus"
+$Location1 = "eastus2"
 
 $VNetName1 = "vnet-eus-01"
 $AddressPrefix1 = "10.0.0.0/16"
@@ -145,13 +145,13 @@ New-CustomVMInstance -Vmname $Vmname1 `
 <#
 Now we create the VPN GW
 #>
-$GWPipName = "pip-vpn-wus"
+$GWPipName = "pip-vpn-eus"
 $gwpip = New-AzPublicIpAddress -Name $GWPipName `
          -ResourceGroupName $ResourceGroupName `
          -Location $Location1 `
          -Sku Standard `
          -AllocationMethod Static `
-         -Tier Regional
+         -Zone 1,2,3
 
 write-Host "Public IP for VPN Gateway created: $($gwpip.IpAddress)" -ForegroundColor Green
 
@@ -175,5 +175,5 @@ New-AzVirtualNetworkGateway -Name "vpngw-eus-01" `
     -VpnType RouteBased `
     -EnableBgp $false `
     -IpConfigurations $gwipconfigObj `
-    -GatewaySku VpnGw1 `
+    -GatewaySku VpnGw1AZ `
     -ErrorAction Stop
