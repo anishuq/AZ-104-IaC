@@ -168,12 +168,32 @@ $gwipconfigObj = New-AzVirtualNetworkGatewayIpConfig -Name "vpngw-eus-01" `
                     -Subnet $VNetEastUS_GWSubnetObj `
                     -PublicIpAddress $gwpip
 
-New-AzVirtualNetworkGateway -Name "vpngw-eus-01" `
-    -ResourceGroupName $ResourceGroupName `
-    -Location $Location1 `
-    -GatewayType Vpn `
-    -VpnType RouteBased `
-    -EnableBgp $false `
-    -IpConfigurations $gwipconfigObj `
-    -GatewaySku VpnGw1AZ `
-    -ErrorAction Stop
+<#
+https://learn.microsoft.com/en-us/powershell/module/az.network/new-azvirtualnetworkgateway?view=azps-16.0.0
+#>
+
+$entraTenantId = "25dd58c6-88cf-4ebe-8870-f7c393c72c9b"
+
+$gwParams = @{
+    Name              = "vpngw-eus-01"
+    ResourceGroupName = $ResourceGroupName
+    Location          = $Location1
+    GatewayType       = "Vpn"
+    VpnType           = "RouteBased"
+    EnableBgp         = $false
+    IpConfigurations  = $gwipconfigObj
+    GatewaySku        = "VpnGw1AZ"
+
+    # --- Add P2S Settings Directly into the Deployment ---
+    VpnClientAddressPool = @("172.16.1.0/24")
+    VpnClientProtocol = "OpenVPN"
+    VpnAuthenticationType = "AAD"
+
+    # Entra ID / Tenant Settings
+    AadTenantUri = "https://login.microsoftonline.com/$entraTenantId"
+    AadAudienceId = "41b23e61-6c1e-4545-b367-cd054e0ed4b4"
+    AadIssuerUri = "https://sts.windows.net/$entraTenantId/"
+}
+
+
+New-AzVirtualNetworkGateway @gwParams -ErrorAction Stop
