@@ -3,10 +3,10 @@
 
 
 # Define Resource Group Name
-$ResourceGroupName = "ServiceEndpoint-rg"
+$ResourceGroupName = "sybex_ch_04_ServiceEndpoint-rg"
 
 # Define Location
-$Location1 = "eastus2"
+$Location1 = "canadacentral"
 
 # Define VNet and Subnet parameters
 $VNetName1 = "DemoVNet1"
