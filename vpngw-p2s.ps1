@@ -1,8 +1,8 @@
 #create a new VNET
-$ResourceGroupName = "vpn-p2s-rg"
+$ResourceGroupName = "Sybex_Ch04_vpn-p2s-rg"
 
 #creating VNET-1 in East US
-$Location1 = "eastus"
+$Location1 = "eastus2"
 
 $VNetName1 = "vnet-eus-01"
 $AddressPrefix1 = "10.0.0.0/16"
@@ -145,13 +145,13 @@ New-CustomVMInstance -Vmname $Vmname1 `
 <#
 Now we create the VPN GW
 #>
-$GWPipName = "pip-vpn-wus"
+$GWPipName = "pip-vpn-eus"
 $gwpip = New-AzPublicIpAddress -Name $GWPipName `
          -ResourceGroupName $ResourceGroupName `
          -Location $Location1 `
          -Sku Standard `
          -AllocationMethod Static `
-         -Tier Regional
+         -Zone 1,2,3
 
 write-Host "Public IP for VPN Gateway created: $($gwpip.IpAddress)" -ForegroundColor Green
 
@@ -168,12 +168,32 @@ $gwipconfigObj = New-AzVirtualNetworkGatewayIpConfig -Name "vpngw-eus-01" `
                     -Subnet $VNetEastUS_GWSubnetObj `
                     -PublicIpAddress $gwpip
 
-New-AzVirtualNetworkGateway -Name "vpngw-eus-01" `
-    -ResourceGroupName $ResourceGroupName `
-    -Location $Location1 `
-    -GatewayType Vpn `
-    -VpnType RouteBased `
-    -EnableBgp $false `
-    -IpConfigurations $gwipconfigObj `
-    -GatewaySku VpnGw1 `
-    -ErrorAction Stop
+<#
+https://learn.microsoft.com/en-us/powershell/module/az.network/new-azvirtualnetworkgateway?view=azps-16.0.0
+#>
+
+$entraTenantId = "25dd58c6-88cf-4ebe-8870-f7c393c72c9b"
+
+$gwParams = @{
+    Name              = "vpngw-eus-01"
+    ResourceGroupName = $ResourceGroupName
+    Location          = $Location1
+    GatewayType       = "Vpn"
+    VpnType           = "RouteBased"
+    EnableBgp         = $false
+    IpConfigurations  = $gwipconfigObj
+    GatewaySku        = "VpnGw1AZ"
+
+    # --- Add P2S Settings Directly into the Deployment ---
+    VpnClientAddressPool = @("172.16.1.0/24")
+    VpnClientProtocol = "OpenVPN"
+    VpnAuthenticationType = "AAD"
+
+    # Entra ID / Tenant Settings
+    AadTenantUri = "https://login.microsoftonline.com/$entraTenantId"
+    AadAudienceId = "41b23e61-6c1e-4545-b367-cd054e0ed4b4"
+    AadIssuerUri = "https://sts.windows.net/$entraTenantId/"
+}
+
+
+New-AzVirtualNetworkGateway @gwParams -ErrorAction Stop

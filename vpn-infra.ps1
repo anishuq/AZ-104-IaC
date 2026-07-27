@@ -8,10 +8,10 @@ MCA Microsoft Certified Associate Azure Administrator Study Guide_ Exam AZ-104-S
 #>
 
 #create a new VNET
-$ResourceGroupName = "vpn-infra-rg"
+$ResourceGroupName = "Sybex_ch04_vpn-infra-rg"
 
 #creating VNET-1 in East US
-$Location1 = "eastus"
+$Location1 = "eastus2"
 
 $VNetName1 = "vnet-eus-01"
 $AddressPrefix1 = "10.0.0.0/16"
@@ -27,7 +27,7 @@ $SubnetAddressPrefix3 = "10.0.0.0/27"
 ############################################
 #creating VNET-2 in West US
 
-$Location2 = "westus"
+$Location2 = "westus2"
 
 $VNetName2 = "vnet-wus-01"
 $AddressPrefix2 = "10.1.0.0/16"
@@ -86,10 +86,11 @@ function New-VNetEastUS {
     $VirtualNetworkObj = New-AzVirtualNetwork @VnetParameters
 
     # Make things "permanent" in Azure!
-    $VirtualNetworkObj | Set-AzVirtualNetwork
+    #$VirtualNetworkObj | Set-AzVirtualNetwork
+    return $VirtualNetworkObj
 }
 
-New-VNetEastUS -SubnetName1 $SubnetName1 `
+$vnetObjEastus = New-VNetEastUS -SubnetName1 $SubnetName1 `
             -SubnetAddressPrefix1 $SubnetAddressPrefix1 `
             -SubnetName2 $SubnetName2 `
             -SubnetAddressPrefix2 $SubnetAddressPrefix2 `
@@ -132,10 +133,11 @@ function New-VNetWestUS {
     $VirtualNetworkObj = New-AzVirtualNetwork @VnetParameters
 
     # Make things "permanent" in Azure!
-    $VirtualNetworkObj | Set-AzVirtualNetwork
+    #$VirtualNetworkObj | Set-AzVirtualNetwork
+    return $VirtualNetworkObj
 }
 
-New-VNetWestUS -SubnetName2 $SubnetName4 `
+$vnetObjWestus = New-VNetWestUS -SubnetName2 $SubnetName4 `
             -SubnetAddressPrefix2 $SubnetAddressPrefix4 `
             -SubnetName3 $SubnetName5 `
             -SubnetAddressPrefix3 $SubnetAddressPrefix5 `
@@ -281,15 +283,18 @@ Now we create the VPN GW for vnet-wus-01.
 This will be done programitacally.
 #>
 
-$GWPipName = "pip-vpn-eus"
+$GWPipName = "pip-vpn-wus2"
 $gwpip = New-AzPublicIpAddress -Name $GWPipName `
          -ResourceGroupName $ResourceGroupName `
          -Location $Location2 `
          -Sku Standard `
          -AllocationMethod Static `
-         -Tier Regional
+         -Zone 1,2,3
 
 write-Host "Public IP for VPN Gateway created: $($gwpip.IpAddress)" -ForegroundColor Green
+
+# Force PowerShell to fetch the fully provisioned resource from Azure
+Start-Sleep -Seconds 5
 
 #Get the VNET object for vnet-wus-01.
 $VNetWestUSObj = Get-AzVirtualNetwork -Name $VNetName2 -ResourceGroupName $ResourceGroupName
@@ -310,4 +315,4 @@ New-AzVirtualNetworkGateway -Name "vpngw-wus-01" `
     -VpnType RouteBased `
     -EnableBgp $false `
     -IpConfigurations $gwipconfigObj `
-    -GatewaySku VpnGw1
+    -GatewaySku VpnGw1AZ
