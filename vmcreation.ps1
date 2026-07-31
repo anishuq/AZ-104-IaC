@@ -1,6 +1,6 @@
 #create a new VNET
-$ResourceGroupName = "az104vnet-rg"
-$Location = "CanadaCentral"
+$ResourceGroupName = "az104NSGtest-rg"
+$Location = "canadacentral"
 $VNetName = "vnet-eus-02"
 $AddressPrefix = "172.16.0.0/16"
 $SubnetName = "subnet-01"
@@ -15,7 +15,7 @@ Connect-AzAccount
 $SubscriptionId = "ff62842a-5857-4d36-9ab5-4fe04c591ad2"
 Select-AzSubscription -SubscriptionId $SubscriptionId
 
-#the resource group already exists.
+New-AzResourceGroup -Name $ResourceGroupName -Location $Location
 
 $subnetconfigobj= New-AzVirtualNetworkSubnetConfig `
     -Name $SubnetName `
@@ -30,10 +30,11 @@ $VirtualNetworkObj = New-AzVirtualNetwork -Name $VNetName `
 $VirtualNetworkObj | Set-AzVirtualNetwork
 
 
-<#
-VM user name: adm.anisulhuq
-VM password: McIe@4:5WmFvM
-#>
+$username = "admanisulhuq" #enter username for all VM
+$plainPassword = "McIe@4:5WmFvM" #enter password for VM
+$password = ConvertTo-SecureString $plainPassword -AsPlainText -Force
+$vmcred = New-Object System.Management.Automation.PSCredential ($username, $password)
+
 $pip = New-AzPublicIpAddress -Name $pipName `
          -ResourceGroupName $ResourceGroupName `
          -Location $Location `
@@ -51,7 +52,7 @@ New-AzVM -ResourceGroupName $ResourceGroupName `
          -PublicIpAddressName $pip.Name `
          -OpenPorts 22 `
          -Image $Image `
-         -Credential (Get-Credential)
+         -Credential $vmcred
 
 
 

@@ -3,7 +3,7 @@
 . "$PSScriptRoot\WebServerInstanceHelper.ps1"
 
 # Define Resource Group Name
-$ResourceGroupName = "LoadBalancer-rg"
+$ResourceGroupName = "Sybex_Ch_05_LoadBalancer-rg"
 
 # Define Location
 $Location1 = "eastus"

@@ -29,7 +29,7 @@ Inbound Security Rules:
 
 $ResourceGroupName = "AZ104-NetworkWatcher"
 
-$Location1 = "eastus"
+$Location1 = "canadacentral" #East US
 
 
 #creating VNET-1 in East US
