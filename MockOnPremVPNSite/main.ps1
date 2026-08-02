@@ -7,10 +7,10 @@ This script will create a VM instance in a specified VNet and Subnet.
 . "$PSScriptRoot\PIPHelper.ps1"
 
 # Define Resource Group Name
-$ResourceGroupName = "AZ104-VPNGatewayOnPrem"
+$ResourceGroupName = "Kelly_Ch_19_Simulated_Virtual_WAN-RG"
 
 # Define Location
-$Location1 = "eastus"
+$Location1 = "canadacentral"
 
 # Define VNet and Subnet parameters. This is only for the VM.
 # The VNET and subnet for VPNGW has been created via the portal.
@@ -47,7 +47,7 @@ $plainPassword = "McIe@45WmFvM" #enter password for VM
 $password = ConvertTo-SecureString $plainPassword -AsPlainText -Force
 $vmcred = New-Object System.Management.Automation.PSCredential ($username, $password)
 
-$VMName = "az104vpnserver"
+$VMName = "az104vpnserver" 
 $NicName = "az104vpnserver-nic01"
 
 #create a PIP for the NIC

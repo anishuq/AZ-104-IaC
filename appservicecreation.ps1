@@ -1,5 +1,5 @@
-$ResourceGroupName = "az104appservice-rg"
-$Location = "Canada Central"
+$ResourceGroupName = "appserviceforprivateendpoint-rg"
+$Location = "canadacentral"
 $AppServicePlanName = "az104appservice-plan"
 $AppServiceInstance = "myfirstwebapp160980"
 
@@ -24,4 +24,4 @@ New-AzWebApp -ResourceGroupName $ResourceGroupName `
 
 
 
-Write-Host "Web App deployed successfully! We are also in github now"
+Write-Host "Web App deployed successfully!"

@@ -22,7 +22,7 @@ Connect-AzAccount
 $SubscriptionId = "ff62842a-5857-4d36-9ab5-4fe04c591ad2"
 Select-AzSubscription -SubscriptionId $SubscriptionId
 
-#The reasource group will be in East US.
+#The reasource group will be in Canada Central`
 New-AzResourceGroup -Name $ResourceGroupName -Location $Location1
 
 $username = "admanisulhuq" #enter username for all VM
