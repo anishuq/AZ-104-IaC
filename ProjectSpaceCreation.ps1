@@ -14,6 +14,7 @@ $projectSubdirectories = @("$projectRoot/architecture",
 
 foreach ($subdir in $projectSubdirectories) {
     New-Item -ItemType Directory -Path $subdir -Force
+    New-Item -ItemType File -Path "$subdir/EmptyFile.md" -Force
 }
 
 New-Item -ItemType File -Path "$projectRoot/README.md" -Force
