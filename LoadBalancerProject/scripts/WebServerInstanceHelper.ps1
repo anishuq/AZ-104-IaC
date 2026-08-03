@@ -8,19 +8,24 @@ function New-AzWebServerCreation{
         [string]$ResourceGroupName,
         [string]$Location,
         [string]$Image,
-        [System.Management.Automation.PSCredential] $Credential 
+        [string]$LBName,
+        [System.Management.Automation.PSCredential] $Credential
     )
 
-    <#Debug infoging purposes only#>x
+    <#Debug infoging purposes only#>
     Write-Host "All the parameters received in New-AzWebServerCreation function:" -ForegroundColor Cyan
     Write-Host "VNetName: $VNetName"
     Write-Host "SubnetName: $SubnetName"
     Write-Host "ResourceGroupName: $ResourceGroupName"
     Write-Host "Location: $Location"
     Write-Host "Image: $Image"
+    Write-Host "LBName: $LBName"
     Write-Host "Credential UserName: $($Credential.UserName)"
     Write-Host "Credential Password: $($Credential.GetNetworkCredential().Password)"
     
+
+    #Get the Load Balancer object
+    $LBObj = Get-AzLoadBalancer -Name $LBName -ResourceGroupName $ResourceGroupName
 
     for($i=1; $i -le 3; $i++){
         <#We don't need public IP for web servers. We also don't need to create NSG
@@ -30,6 +35,10 @@ function New-AzWebServerCreation{
             -VNetName $VNetName -SubnetName $SubnetName `
             -ResourceGroupName $ResourceGroupName -Location $Location `
             -ErrorAction Stop
+        
+        #We need to associate the NIC with the backend pool of the load balancer.
+        $nic.IpConfigurations[0].LoadBalancerBackendAddressPools = $LBObj.BackendAddressPools
+        Set-AzNetworkInterface -NetworkInterface $nic -ErrorAction Stop
         
         #At the beginning we are not going to use the NIC created above.
 

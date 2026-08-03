@@ -1,15 +1,16 @@
 . "$PSScriptRoot\NetworkHelper.ps1"
 . "$PSScriptRoot\VMInstanceHelper.ps1"
 . "$PSScriptRoot\WebServerInstanceHelper.ps1"
+. "$PSScriptRoot\LoadBalancerHelper.ps1"
 
 # Define Resource Group Name
-$ResourceGroupName = "Sybex_Ch_05_LoadBalancer-rg"
+$ResourceGroupName = "Sybex_Ch_05_LoadBalancer_OnlyPS-rg"
 
 # Define Location
-$Location1 = "eastus"
+$Location1 = "canadacentral"
 
 # Define VNet and Subnet parameters
-$VNetName1 = "vnet-eus-01"
+$VNetName1 = "vnet-can-01"
 $AddressPrefix1 = "10.0.0.0/16"
 
 $SubnetName1 = "jumpboxSubnet"
@@ -24,15 +25,22 @@ Connect-AzAccount
 $SubscriptionId = "ff62842a-5857-4d36-9ab5-4fe04c591ad2"
 Select-AzSubscription -SubscriptionId $SubscriptionId
 
-#The reasource group will be in East US.
+#The reasource group will be in Canada Central.
 New-AzResourceGroup -Name $ResourceGroupName -Location $Location1
-
 
 
 New-AzVNetSubnetCreation -ResourceGroupName $ResourceGroupName -Location $Location1 `
 -vnetName $VNetName1 -vnetAddressPrefix $AddressPrefix1 `
 -jumpboxSubnetName $SubnetName1 -jumpboxAddressPrefix $SubnetAddressPrefix1 `
 -webSubnetName $SubnetName2 -webAddressPrefix $SubnetAddressPrefix2 
+
+#Call to create the Load Balancer.
+#The LB "lives" in the web subnet, so we need to pass the web subnet name to the function.
+$LBName = "webLoadBalancer"      
+$LBObj = New-AzWebLoadBalancer -ResourceGroupName $ResourceGroupName -Location $Location1 `
+        -LoadBalancerName $LBName -VnetName $VNetName1 -SubnetName $SubnetName2   
+
+
 
 #VM creation parameters
 #Choose an image for the VM: Ubuntu Server 22.04 LTS
@@ -47,7 +55,6 @@ $jumpboxVMName = "jumpbox-vm"
 
 
 #First, create the jumpbox VM with public IP
-
 New-AzVMCreation -pipName "jumpbox-pip" -EnablePublicIP $true `
 -Vmname $jumpboxVMName -VNetName $VNetName1 -SubnetName $SubnetName1 `
 -ResourceGroupName $ResourceGroupName -Location $Location1 `
@@ -57,6 +64,7 @@ New-AzVMCreation -pipName "jumpbox-pip" -EnablePublicIP $true `
 
 #Second, create the WebServer VMs without public IP.
 #We will create 3 web servers in a loop inside the function.
+#Each web server will be created in the web subnet, and will be associated with the load balancer backend pool.
 New-AzWebServerCreation -VNetName $VNetName1 -SubnetName $SubnetName2 `
 -ResourceGroupName $ResourceGroupName -Location $Location1 `
--Image $Image -Credential $vmcred
+-Image $Image -LBName $LBName -Credential $vmcred 
