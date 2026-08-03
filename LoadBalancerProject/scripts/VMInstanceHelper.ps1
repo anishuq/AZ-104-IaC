@@ -33,7 +33,7 @@ function New-AzVMCreation{
         -ResourceGroupName $ResourceGroupName `
         -Location $Location `
         -AllocationMethod Static `
-        -Sku Basic `
+        -Sku Standard `
         -DomainNameLabel ($Vmname + "-webserveradmin") `
         -ErrorAction Stop
 
