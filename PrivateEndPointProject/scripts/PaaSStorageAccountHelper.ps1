@@ -22,5 +22,5 @@ function New-AzPaaSStorageAccount{
         
     Write-Host "Storage Account obj type:  $($storageAccountObj.GetType().FullName)"
     # Microsoft.Azure.Commands.Management.Storage.Models.PSStorageAccount
-
-    New-AzBlobContainerCreation -StrAccObj $storageAccountObj -ResourceGroupName $ResourceGroupName 
+    return $storageAccountObj
+} 

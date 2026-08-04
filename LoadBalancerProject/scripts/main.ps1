@@ -1,16 +1,15 @@
 . "$PSScriptRoot\NetworkHelper.ps1"
 . "$PSScriptRoot\VMInstanceHelper.ps1"
 . "$PSScriptRoot\WebServerInstanceHelper.ps1"
-. "$PSScriptRoot\LoadBalancerHelper.ps1"
 
 # Define Resource Group Name
-$ResourceGroupName = "Sybex_Ch_05_LoadBalancer_OnlyPS-rg"
+$ResourceGroupName = "Sybex_Ch_05_LoadBalancer-rg"
 
 # Define Location
-$Location1 = "canadacentral"
+$Location1 = "canadacentral" # Choose a location that supports the resources you want to create
 
 # Define VNet and Subnet parameters
-$VNetName1 = "vnet-can-01"
+$VNetName1 = "vnet-eus-01"
 $AddressPrefix1 = "10.0.0.0/16"
 
 $SubnetName1 = "jumpboxSubnet"
@@ -28,19 +27,10 @@ Select-AzSubscription -SubscriptionId $SubscriptionId
 #The reasource group will be in Canada Central.
 New-AzResourceGroup -Name $ResourceGroupName -Location $Location1
 
-
 New-AzVNetSubnetCreation -ResourceGroupName $ResourceGroupName -Location $Location1 `
 -vnetName $VNetName1 -vnetAddressPrefix $AddressPrefix1 `
 -jumpboxSubnetName $SubnetName1 -jumpboxAddressPrefix $SubnetAddressPrefix1 `
 -webSubnetName $SubnetName2 -webAddressPrefix $SubnetAddressPrefix2 
-
-#Call to create the Load Balancer.
-#The LB "lives" in the web subnet, so we need to pass the web subnet name to the function.
-$LBName = "webLoadBalancer"      
-$LBObj = New-AzWebLoadBalancer -ResourceGroupName $ResourceGroupName -Location $Location1 `
-        -LoadBalancerName $LBName -VnetName $VNetName1 -SubnetName $SubnetName2   
-
-
 
 #VM creation parameters
 #Choose an image for the VM: Ubuntu Server 22.04 LTS
@@ -64,7 +54,6 @@ New-AzVMCreation -pipName "jumpbox-pip" -EnablePublicIP $true `
 
 #Second, create the WebServer VMs without public IP.
 #We will create 3 web servers in a loop inside the function.
-#Each web server will be created in the web subnet, and will be associated with the load balancer backend pool.
 New-AzWebServerCreation -VNetName $VNetName1 -SubnetName $SubnetName2 `
 -ResourceGroupName $ResourceGroupName -Location $Location1 `
--Image $Image -LBName $LBName -Credential $vmcred 
+-Image $Image -Credential $vmcred

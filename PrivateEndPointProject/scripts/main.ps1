@@ -1,5 +1,6 @@
 . "$PSScriptRoot\PaaSStorageAccountHelper.ps1"
 . "$PSScriptRoot\NetworkHelper.ps1"
+. "$PSScriptRoot\PrivateEndpointHelper.ps1"
 
 
 $ResourceGroupName = "PrivateEndPoint-rg"
@@ -28,3 +29,10 @@ $uniqueString = [DateTimeOffset]::UtcNow.ToUnixTimeSeconds()
 $storageAccountObj = New-AzPaaSStorageAccount -ResourceGroupName $ResourceGroupName `
                             -Location $Location `
                             -uniqueString $uniqueString
+
+New-AzPrivateEndpointCreation -ResourceGroupName $ResourceGroupName `
+                            -Location $Location `
+                            -vnetName $VNetName `
+                            -subnetName $SubnetName `
+                            -privateEndpointName "privateendpoint$uniqueString" `
+                            -storageAccountId $storageAccountObj.Id
