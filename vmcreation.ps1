@@ -39,7 +39,7 @@ $pip = New-AzPublicIpAddress -Name $pipName `
          -ResourceGroupName $ResourceGroupName `
          -Location $Location `
          -AllocationMethod Static `
-         -Sku Basic
+         -Sku Standard
 
 
 

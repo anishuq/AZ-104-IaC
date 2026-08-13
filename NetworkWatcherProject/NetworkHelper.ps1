@@ -71,7 +71,13 @@ function New-AzVNetSubnetsCreation{
                                         -Location $Location `
                                         -Name "$($vnetName)-nsg" `
                                         -SecurityRules $rdpAllowRule, $icmpAllowRule, $httpAllowRule    
-
+    <#
+    Explanation is in "Part-5 Monitor and maintain Azure resources" DOC.
+    #>    
+    
+    
+    
+    
     Write-Host "VNET obj type 2nd time:  $($vnetObj.GetType().FullName)"
     #Associate NSG to subnet   
                  
