@@ -19,7 +19,7 @@ function New-AzVMInstanceCreation{
         Write-Host "Parameter '$key' was set to: $($PSBoundParameters[$key])"
     } 
 
-    #Create a NIC that is a is the bridge between your VM and the virtual network. 
+    #Create a NIC so that it is a bridge between your VM and the virtual network. 
     #In PowerShell, we use the New-AzNetworkInterface command, referencing the vpnvnet and vnpsubnet.
     Write-Host "Creating NIC: $NicName ..... "
     $nicObj = New-AzNetworkInterface -ResourceGroupName $ResourceGroupName `

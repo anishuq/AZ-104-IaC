@@ -7,7 +7,7 @@ This script will create a VM instance in a specified VNet and Subnet.
 . "$PSScriptRoot\PIPHelper.ps1"
 
 # Define Resource Group Name
-$ResourceGroupName = "Kelly_Ch_19_Simulated_Virtual_WAN-RG"
+$ResourceGroupName = "Kelly_Ch_19_Simulated_S2S_VPN-RG"
 
 # Define Location
 $Location1 = "canadacentral"
