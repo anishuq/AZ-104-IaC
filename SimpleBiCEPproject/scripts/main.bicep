@@ -1,4 +1,4 @@
-//This script assumes that the ressource group 
+//This script assumes that the resource group 
 //is already created and the location is set to the resource group location.
 @minLength(3)
 @maxLength(24)
@@ -14,23 +14,31 @@ param skuName string = 'Standard_LRS'
 
 var uniqueSuffix = toLower((substring(uniqueString(resourceGroup().id), 0, 6)))
 var uniqueStrAccName = 'str${storageAccountName}${uniqueSuffix}'
+var regions = [
+  'eastus'
+  'canadacentral'
+  'westeurope'
+]
 
-module storageAccountModule './storageaccount.bicep' = {
-  name: 'strAccModuleDeployment'
+module storageAccountModule './storageaccount.bicep' = [for (region,i) in regions: {
+  name: 'strAccModuleDeployment${i}'
   params: {
-    storageAccountName: uniqueStrAccName
+    storageAccountName: '${uniqueStrAccName}${i}'
     skuName: skuName
-    location: location
+    location: region
   }
-}
+}]
 
 module webAppModule './webapp.bicep' = {
   name: 'webAppModuleDeployment'
   params: {
     name: 'webapp-${uniqueSuffix}'
-    location: location
-    storageEndpoint: storageAccountModule.outputs.endpoint
+    location: regions[1]
+    storageEndpoint: storageAccountModule[0].outputs.endpoint
   }
 }
 
-output webappurl string = webAppModule.outputs.url
+
+output webAppsURL string = webAppModule.outputs.url
+
+
