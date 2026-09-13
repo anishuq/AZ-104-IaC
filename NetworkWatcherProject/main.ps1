@@ -27,7 +27,7 @@ Inbound Security Rules:
 . "$PSScriptRoot/NetworkHelper.ps1"
 . "$PSScriptRoot/VMInstanceHelper.ps1"
 
-$ResourceGroupName = "AZ104-NetworkWatcher"
+$ResourceGroupName = "AZ104-NetworkWatcher-RG"
 
 $Location1 = "canadacentral" #East US
 

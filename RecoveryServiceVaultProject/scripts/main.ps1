@@ -19,7 +19,7 @@ $vmObj = New-AzVMInstance -ResourceGroupName $ResourceGroupName -Location $Locat
 
 $vaultObj = New-AzRecoveryServicesVault -ResourceGroupName $ResourceGroupName `
     -Location $Location `
-    -Name "AZ104RecoveryServiceVault"
+    -Name "AZ104RecoveryServiceVault01"
 
 Set-AzRecoveryServicesBackupProperty -Vault $vaultObj -BackupStorageRedundancy GeoRedundant
 

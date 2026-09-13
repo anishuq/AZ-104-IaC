@@ -18,7 +18,7 @@ function New-AzVMInstance {
     $vmParams = @{
         ResourceGroupName = $ResourceGroupName
         Location          = $Location
-        Name              = "BCDRVM1"
+        Name              = "BCDRVM01"
         Image             = "MicrosoftWindowsServer:WindowsServer:2019-Datacenter:latest"
         Size              = "Standard_B2s"
         Credential        = $vmcred
