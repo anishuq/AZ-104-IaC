@@ -80,9 +80,19 @@ Each project folder is self-contained. `cd` into the one you want, check for a s
 
 ```powershell
 # Example
-cd StorageAccountProject
-./deploy.ps1
+cd SampleProject/
+./main.ps1
 ```
+
+OR
+
+```powershell
+# Example
+cd StorageAccountProject/scripts
+./main.ps1
+```
+
+
 
 ## Status
 
