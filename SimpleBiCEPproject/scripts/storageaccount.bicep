@@ -1,14 +1,6 @@
-@minLength(3)
-@maxLength(24)
-param storageAccountName string 
-param location string = resourceGroup().location
-
-@description('The SKU of the storage account.')
-@allowed([
-  'Standard_LRS'
-  'Standard_GRS'
-])
-param skuName string = 'Standard_LRS'
+param location string 
+param storageAccountName string
+param skuName string
 
 resource storageAccount 'Microsoft.Storage/storageAccounts@2025-08-01' = {
    name: storageAccountName
@@ -22,4 +14,7 @@ resource storageAccount 'Microsoft.Storage/storageAccounts@2025-08-01' = {
    }
  }
 
- output storageAccountId string = storageAccount.name
+ output storageAccountId string = storageAccount.id
+ output endpoint string = storageAccount.properties.primaryEndpoints.blob
+
+

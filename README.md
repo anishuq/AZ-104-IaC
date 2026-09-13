@@ -1,18 +1,103 @@
-# 💫 About Me:
-🔭 I'm currently working on completing the AZ-104 Microsoft Azure Administrator certification through hands-on IaC deployments using PowerShell, Bicep, and Azure CLI — building a real Azure environment from scratch in my GitHub repo AZ-104-IaC.<br><br>👯 I'm looking to collaborate on Cloud infrastructure projects, Azure security automation, or any open-source work involving IAM, Entra ID, or Microsoft Sentinel. Also interested in Government of Canada or public sector tech initiatives.<br><br>🤝 I'm looking for help with<br>Best practices for Microsoft Sentinel KQL queries and Defender for Cloud automation — preparing for SC-200 after AZ-104.<br><br>🌱 I'm currently learning Azure Administrator (AZ-104) — networking, VPN Gateway, VNet peering, VMSS, and AKS. Next stop: SC-300 Identity & Access Administrator, then SC-200 Security Operations Analyst.<br><br>💬 Ask me about Azure infrastructure and IaC (ARM, Bicep, PowerShell splatting), Site Reliability Engineering, cloud security fundamentals, or navigating the Canadian federal IT contracting landscape — including what it takes to get a Government of Canada security clearance.<br><br>⚡ Fun fact I hold an MSc in Mobile Computing & Security from Aalto University (Finland), have published 4 academic papers in computer networking, and taught university-level software engineering and information security across three universities on two continents — before moving into cloud engineering.<br>
+[README.md](https://github.com/user-attachments/files/32165086/README.md)
+# AZ-104-IaC
+
+Hands-on Infrastructure-as-Code labs built while studying for the **Microsoft AZ-104: Azure Administrator** certification.
+
+Every folder here is a real deployment in my own Azure subscription, built with PowerShell, Azure CLI, ARM templates, or Bicep. No portal-only clicking. If it's in this repo, it was scripted and it ran.
+
+## Why this repo exists
+
+Studying from a textbook only gets you so far. Most of the labs here started as textbook exercises that broke in practice (deployment errors, deprecated syntax, missing permissions), and the folder is what I built after fixing them myself. That's also why some folders have more than one attempt in them.
+
+## Tech stack
+
+PowerShell 7 · Azure CLI · ARM Templates · Bicep · GitHub Actions
+
+## Repo structure by AZ-104 domain
+
+### 1. Manage Azure identities and governance
+| Folder | What it covers |
+|---|---|
+| `EntraIDUserManagementProject` | Entra ID user/group management |
+| `ResourceTagsProject` | Resource tagging strategy |
+
+### 2. Implement and manage storage
+| Folder | What it covers |
+|---|---|
+| `StorageAccountProject` | Storage accounts, blob tiers, lifecycle policies |
+
+### 3. Deploy and manage Azure compute resources
+| Folder | What it covers |
+|---|---|
+| `AppServiceProject` | App Service deployment |
+| `AppServiceCodeProject` | App Service with code deployment / CI-CD |
+| `ContainerProject` | Azure Container Instances |
+| `AzCLIProject` | Azure CLI-driven deployments |
+| `vmcreation.ps1` | VM provisioning script |
+| `appservicecreation.ps1` | App Service provisioning script |
+
+### 4. Implement and manage virtual networking
+| Folder | What it covers |
+|---|---|
+| `ApplicationSecurityGroupProject` | ASGs for VM-level network segmentation |
+| `BastionFWProject` | Azure Bastion and Firewall |
+| `LoadBalancerProject` / `LoadBalancerPortalProject` | Load Balancer via script and portal |
+| `WebApplicationGWProject` | Application Gateway |
+| `MockOnPremVPNSite` | Simulated on-prem site for VPN testing |
+| `NetworkWatcherProject` / `NetworkWatcherVPNTroubleShoot` | Network Watcher: flow logs, connection monitor, VPN troubleshooting |
+| `PrivateDNS` / `PublicDNSDemo` | DNS zone configuration |
+| `PrivateEndPointProject` | Private Endpoints |
+| `ServiceEndpoint` | Service Endpoints |
+| `az104vnet01.ps1` | Base VNet setup |
+| `vnetpeering-new.ps1` | VNet peering (hub-and-spoke) |
+| `vpn-infra.ps1` / `vpngw-p2s.ps1` | VPN Gateway: site-to-site and point-to-site |
+| `webappgw.sh` | App Gateway (CLI/bash variant) |
+
+### 5. Monitor and maintain Azure resources
+| Folder | What it covers |
+|---|---|
+| `AzureMonitorProject` | Azure Monitor, VM Insights, alerting |
+| `RecoveryServiceVaultProject` | Backup and Recovery Services Vault |
+| `vaultremoval.ps1` | Vault cleanup script |
+
+### Infrastructure-as-Code fundamentals
+| Folder | What it covers |
+|---|---|
+| `ARMResourceProject` | ARM template authoring |
+| `SimpleBiCEPproject/scripts` | Bicep basics |
+
+### Utility scripts
+| File | Purpose |
+|---|---|
+| `ProjectSpaceCreation.ps1` | Spins up a clean resource group / project scaffold |
+| `DeleteAzureSync.ps1` | Teardown script for storage sync issues |
+| `unittests.ps1` | Basic test coverage for scripts in this repo |
+| `extensions.txt` | VS Code extensions used for this project |
+
+## How to use this repo
+
+Each project folder is self-contained. `cd` into the one you want, check for a script or `.bicep`/`.json` file, and read through it before running; most assume you already have `Connect-AzAccount` or `az login` done and a target subscription set.
+
+```powershell
+# Example
+cd SampleProject/
+./main.ps1
+```
+
+OR
+
+```powershell
+# Example
+cd SampleProject/scripts
+./main.ps1
+```
 
 
-## 🌐 Socials:
-[![LinkedIn](https://img.shields.io/badge/LinkedIn-%230077B5.svg?logo=linkedin&logoColor=white)](https://linkedin.com/in/A M Anisul Huq) [![Medium](https://img.shields.io/badge/Medium-12100E?logo=medium&logoColor=white)](https://medium.com/@Anisul Huq) [![Stack Overflow](https://img.shields.io/badge/-Stackoverflow-FE7A16?logo=stack-overflow&logoColor=white)](https://stackoverflow.com/users/user676987) 
 
-# 💻 Tech Stack:
-![PowerShell](https://img.shields.io/badge/PowerShell-%235391FE.svg?style=for-the-badge&logo=powershell&logoColor=white) ![Java](https://img.shields.io/badge/java-%23ED8B00.svg?style=for-the-badge&logo=openjdk&logoColor=white) ![Windows Terminal](https://img.shields.io/badge/Windows%20Terminal-%234D4D4D.svg?style=for-the-badge&logo=windows-terminal&logoColor=white) ![Bash Script](https://img.shields.io/badge/bash_script-%23121011.svg?style=for-the-badge&logo=gnu-bash&logoColor=white) ![Azure](https://img.shields.io/badge/azure-%230072C6.svg?style=for-the-badge&logo=microsoftazure&logoColor=white) ![MySQL](https://img.shields.io/badge/mysql-4479A1.svg?style=for-the-badge&logo=mysql&logoColor=white) ![Git](https://img.shields.io/badge/git-%23F05033.svg?style=for-the-badge&logo=git&logoColor=white) ![GitHub](https://img.shields.io/badge/github-%23121011.svg?style=for-the-badge&logo=github&logoColor=white) ![Docker](https://img.shields.io/badge/docker-%230db7ed.svg?style=for-the-badge&logo=docker&logoColor=white) ![Jira](https://img.shields.io/badge/jira-%230A0FFF.svg?style=for-the-badge&logo=jira&logoColor=white)
-# 📊 GitHub Stats:
-![](https://github-readme-stats.shion.dev/api?username=anishuq&theme=dark&hide_border=false&include_all_commits=false&count_private=false)<br/>
-![](https://streak-stats.demolab.com/?user=anishuq&theme=dark&hide_border=false)<br/>
-![](https://github-readme-stats.shion.dev/api/top-langs/?username=anishuq&theme=dark&hide_border=false&include_all_commits=false&count_private=false&layout=compact)
+## Status
 
----
-[![](https://komarev.com/ghpvc/?username=anishuq&icon=0&color=0)](https://visitcount.itsvg.in)
+Actively maintained while I finish AZ-104 prep. New folders get added as I work through remaining exam domains.
 
-<!-- Proudly created with GPRM ( https://gprm.itsvg.in ) -->
+## About me
+
+MSc in Mobile Computing & Security (Aalto University). Former SRE and IT consultant, now rebuilding toward cloud/security roles through hands-on Azure work. Currently AZ-104, next up SC-300 and SC-200.
