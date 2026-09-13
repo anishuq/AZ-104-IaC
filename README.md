@@ -88,7 +88,7 @@ OR
 
 ```powershell
 # Example
-cd StorageAccountProject/scripts
+cd SampleProject/scripts
 ./main.ps1
 ```
 
