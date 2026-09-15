@@ -45,7 +45,8 @@ Write-Host "Creating VMS now..." -ForegroundColor Green
 
 $Image = "Canonical:0001-com-ubuntu-server-jammy:22_04-lts:latest"
 $username = "admanisulhuq" #enter username for all VM
-$plainPassword = "McIe@4-5WmFvM" #enter password for VM
+#$plainPassword = "McIe@4-5WmFvM" #enter password for VM
+$plainPassword = Read-Host -AsSecureString "Enter VM password:"
 $password = ConvertTo-SecureString $plainPassword -AsPlainText -Force
 $vmcred = New-Object System.Management.Automation.PSCredential ($username, $password)
 
